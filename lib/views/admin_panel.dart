@@ -10,6 +10,11 @@ class AdminPanel extends StatelessWidget {
       body: Center(
         child: Text('testing that shite'),
       ),
+      drawer: Drawer(
+        child: ListTile(
+          title: Text('Logout'),
+        ),
+      ),
     );
   }
 }

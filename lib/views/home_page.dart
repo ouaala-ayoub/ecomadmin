@@ -1,7 +1,10 @@
 import 'package:ecomadmin/providers/auth_provider.dart';
+import 'package:ecomadmin/providers/login_provider.dart';
 import 'package:ecomadmin/views/admin_panel.dart';
+import 'package:ecomadmin/views/error_page.dart';
 import 'package:ecomadmin/views/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final AuthProvider authProvider;
@@ -26,9 +29,19 @@ class _HomePageState extends State<HomePage> {
             child: CircularProgressIndicator(),
           )
         : provider.auth.fold(
-            (e) => e == 'Unauthorized' && e == 'no session cookie'
-                ? LoginPage()
-                : ErrorWidget(e),
+            (e) => e == 401
+                ? ChangeNotifierProvider(
+                    create: (context) => LoginProvider(),
+                    child: Consumer<LoginProvider>(
+                      builder: (context, loginProvider, child) => LoginPage(
+                        authProvider: provider,
+                        loginProvider: loginProvider,
+                      ),
+                    ),
+                  )
+                : ErrorPage(
+                    message: e.toString(),
+                  ),
             (auth) => AdminPanel());
   }
 }

@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
         child: MaterialApp.router(
           title: 'Admin panel',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+            canvasColor: Colors.transparent,
             useMaterial3: true,
           ),
           debugShowCheckedModeBanner: false,
