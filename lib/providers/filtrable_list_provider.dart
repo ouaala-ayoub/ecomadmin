@@ -4,15 +4,15 @@ import 'package:logger/logger.dart';
 
 import '../models/core/helper.dart';
 
-class FilterableListProvider<T> extends ChangeNotifier {
+class FilterableListProvider extends ChangeNotifier {
   FilterableListProvider(this.helper);
 
   final Helper helper;
   final logger = Logger();
   bool loading = false;
-  Either<dynamic, List<T>> list = const Right([]);
-  Either<dynamic, List<T>> _found = const Right([]);
-  Either<dynamic, List<T>> get found => _found;
+  Either<dynamic, List<dynamic>> list = const Right([]);
+  Either<dynamic, List<dynamic>> _found = const Right([]);
+  Either<dynamic, List<dynamic>> get found => _found;
 
   deleteElement(String id,
       {required Function() onFail, Function()? onSuccess}) async {

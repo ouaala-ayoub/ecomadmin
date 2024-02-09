@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class FilterableListWidget<T> extends StatefulWidget {
   final Widget Function(BuildContext, T) itemBuilder;
-  final FilterableListProvider<T> provider;
+  final FilterableListProvider provider;
   const FilterableListWidget(
       {required this.itemBuilder, required this.provider, super.key});
 
