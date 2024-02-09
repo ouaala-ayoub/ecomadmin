@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/admin.dart';
 import 'package:ecomadmin/models/helpers/auth_helper.dart';
+import 'package:ecomadmin/models/helpers/cookie_helpers.dart';
 import 'package:flutter/material.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -15,12 +15,13 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  login(Admin admin) async {
-    loading = true;
+  setAuth(Admin admin) {
+    auth = Right(admin);
     notifyListeners();
-    auth = await AuthHelper.login(admin.username!, admin.password!);
-    logger.i("auth ${auth.toString()}");
-    loading = false;
-    notifyListeners();
+  }
+
+  logout() async {
+    await deleteSessionCookie();
+    getAuth();
   }
 }

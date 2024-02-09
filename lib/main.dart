@@ -32,7 +32,6 @@ class MyApp extends StatelessWidget {
           title: 'Admin panel',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-            canvasColor: Colors.transparent,
             useMaterial3: true,
           ),
           debugShowCheckedModeBanner: false,

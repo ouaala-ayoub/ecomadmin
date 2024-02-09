@@ -15,22 +15,20 @@ class StyledTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: 300,
-        child: TextField(
-          controller: controller,
-          maxLines: 1,
-          minLines: 1,
-          decoration: InputDecoration(
-            prefixIcon: prefixIcon,
-            label: Text(label),
-            contentPadding: const EdgeInsets.only(left: 20, right: 20),
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(30),
-              ),
-            ),
+    return TextField(
+      controller: controller,
+      maxLines: 1,
+      minLines: 1,
+      decoration: InputDecoration(
+        prefixIcon: prefixIcon,
+        label: Text(label),
+        contentPadding: const EdgeInsets.only(left: 20, right: 20),
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(30),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

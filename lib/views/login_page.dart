@@ -15,8 +15,19 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Column(
+      body: loginProvider.loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : loginBody(),
+    );
+  }
+
+  Center loginBody() {
+    return Center(
+        child: Padding(
+      padding: const EdgeInsets.only(left: 20, right: 10),
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           const SelectableText(
@@ -41,25 +52,29 @@ class LoginPage extends StatelessWidget {
             label: 'Mot de passe',
             controller: loginProvider.passwordController,
           ),
+          loginProvider.loginError != null
+              ? Text(
+                  '${loginProvider.loginError}',
+                  style: const TextStyle(color: Colors.red),
+                )
+              : const SizedBox.shrink(),
           const SizedBox(
-            height: 40,
+            height: 20,
           ),
-          SizedBox(
-              height: 45,
-              width: 250,
-              child: FilledButton(
-                  onPressed: () {
-                    final creds = Admin(
-                        username: loginProvider.usernameController.text,
-                        password: loginProvider.passwordController.text);
+          FilledButton(
+              onPressed: () {
+                final creds = Admin(
+                    username: loginProvider.usernameController.text,
+                    password: loginProvider.passwordController.text);
 
-                    logger.i(creds.toMap());
+                logger.i(creds.toMap());
 
-                    authProvider.login(creds);
-                  },
-                  child: const Text('Connexion')))
+                loginProvider.login(creds,
+                    onSuccess: (admin) => authProvider.setAuth(admin));
+              },
+              child: const Text('Connexion')),
         ],
-      )),
-    );
+      ),
+    ));
   }
 }

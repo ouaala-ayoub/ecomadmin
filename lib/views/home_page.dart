@@ -42,6 +42,8 @@ class _HomePageState extends State<HomePage> {
                 : ErrorPage(
                     message: e.toString(),
                   ),
-            (auth) => AdminPanel());
+            (auth) => AdminPanel(
+                  authProvider: provider,
+                ));
   }
 }

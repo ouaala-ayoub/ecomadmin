@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/admin.dart';
+import 'package:ecomadmin/models/helpers/cookie_helpers.dart';
 import 'package:ecomadmin/models/services/auth_api.dart';
 
 class AuthHelper {
@@ -10,6 +11,7 @@ class AuthHelper {
       final res = await AuthApi.getAuth();
       return Right(Admin.fromMap(res));
     } on DioException catch (e) {
+      logger.e(e);
       logger.e(e.response?.statusCode);
       logger.e(e.response?.data['message']);
       return Left(e.response?.statusCode);
@@ -33,5 +35,9 @@ class AuthHelper {
       logger.e(e);
       return const Left(500);
     }
+  }
+
+  logout() async {
+    await deleteSessionCookie();
   }
 }
