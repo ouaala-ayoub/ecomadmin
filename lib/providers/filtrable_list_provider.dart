@@ -30,7 +30,7 @@ class FilterableListProvider<T> extends ChangeNotifier {
 
   getList() async {
     loading = true;
-    list = await helper.getAll();
+    list = await helper.fetshAll();
     _found = list;
     loading = false;
     notifyListeners();

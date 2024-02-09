@@ -41,6 +41,7 @@ dependencies:
   flutter_secure_storage :
   logger :
   go_router:
+  flutter_dotenv :
   
 
 dev_dependencies:

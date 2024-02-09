@@ -4,7 +4,7 @@ import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/helpers/cookie_helpers.dart';
 
 class AuthApi {
-  static const baseUrl = 'http://10.0.2.2:3000/auth';
+  static const baseUrl = 'https://e-com-test-1mmf.onrender.com/auth';
   static Future<dynamic> getAuth() async {
     const endpoint = baseUrl;
     final cookie = await getSessionCookie();

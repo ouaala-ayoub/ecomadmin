@@ -1,5 +1,5 @@
 class Helper {
-  getAll() {}
+  fetshAll() {}
   deleteElement(String id) {}
   postElement(dynamic object) {}
   putElement(String id, dynamic object) {}

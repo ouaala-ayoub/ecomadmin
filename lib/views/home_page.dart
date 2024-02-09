@@ -26,8 +26,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final provider = widget.authProvider;
     return provider.loading
-        ? const Center(
-            child: CircularProgressIndicator(),
+        ? const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
           )
         : provider.auth.fold(
             (e) => e == 401
