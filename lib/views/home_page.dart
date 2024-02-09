@@ -1,3 +1,4 @@
+import 'package:ecomadmin/providers/admin_panel_provider.dart';
 import 'package:ecomadmin/providers/auth_provider.dart';
 import 'package:ecomadmin/providers/login_provider.dart';
 import 'package:ecomadmin/views/admin_panel.dart';
@@ -42,8 +43,14 @@ class _HomePageState extends State<HomePage> {
                 : ErrorPage(
                     message: e.toString(),
                   ),
-            (auth) => AdminPanel(
-                  authProvider: provider,
+            (auth) => ChangeNotifierProvider(
+                  create: (context) => AdminPanelProvider(),
+                  child: Consumer<AdminPanelProvider>(
+                    builder: (context, adminPanelProvider, child) => AdminPanel(
+                      panelProvider: adminPanelProvider,
+                      authProvider: provider,
+                    ),
+                  ),
                 ));
   }
 }

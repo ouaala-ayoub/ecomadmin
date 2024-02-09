@@ -1,16 +1,29 @@
+import 'package:ecomadmin/models/core/helper.dart';
+import 'package:ecomadmin/providers/admin_panel_provider.dart';
 import 'package:ecomadmin/providers/auth_provider.dart';
+import 'package:ecomadmin/providers/filtrable_list_provider.dart';
+import 'package:ecomadmin/views/filterable_list_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class AdminPanel extends StatelessWidget {
   final AuthProvider authProvider;
-  const AdminPanel({required this.authProvider, super.key});
+  final AdminPanelProvider panelProvider;
+  static const titles = ['Produits', 'Commandes', 'Categories', 'Admins'];
+  const AdminPanel(
+      {required this.authProvider, super.key, required this.panelProvider});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('admin panel')),
-      body: Center(
-        child: Text('testing that shite'),
+      appBar: AppBar(title: Text(titles[panelProvider.index])),
+      body: ChangeNotifierProvider(
+        create: (context) => FilterableListProvider(Helper()),
+        child: Consumer<FilterableListProvider>(
+          builder: (context, filterProvider, child) =>
+              FilterableListWidget(provider: filterProvider),
+        ),
       ),
       drawer: Drawer(
         child: ListView(padding: EdgeInsets.zero, children: [
@@ -21,21 +34,17 @@ class AdminPanel extends StatelessWidget {
                 'to add admin informations',
                 style: TextStyle(color: Colors.white),
               )),
-          ListTile(
-            title: Text('Produits'),
-            onTap: () {},
-          ),
-          ListTile(
-            title: Text('Commandes'),
-            onTap: () {},
-          ),
-          ListTile(
-            title: Text('Categories'),
-            onTap: () {},
-          ),
-          ListTile(
-            title: Text('Admins'),
-            onTap: () {},
+          Column(
+            children: titles.map((element) {
+              final index = titles.indexOf(element);
+              return ListTile(
+                title: Text(element),
+                onTap: () {
+                  panelProvider.setIndex(index);
+                  context.pop();
+                },
+              );
+            }).toList(),
           ),
           ListTile(
             title: Text('Logout'),
