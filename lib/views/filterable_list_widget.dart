@@ -2,6 +2,7 @@ import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/helpers/function_helpers.dart';
 import 'package:ecomadmin/providers/filtrable_list_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class FilterableListWidget extends StatefulWidget {
   final String route;
@@ -34,7 +35,6 @@ class _FilterableListWidgetState<T> extends State<FilterableListWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(widget.route),
         searchField(onChanged: (value) => widget.provider.runFilter(value)),
         Expanded(
           child: RefreshIndicator.adaptive(
@@ -44,8 +44,8 @@ class _FilterableListWidgetState<T> extends State<FilterableListWidget> {
                     )
                   : widget.provider.found.fold(
                       (e) => Center(
-                            child: Text('$e'),
-                          ),
+                        child: Text('$e'),
+                      ),
                       (data) => data.isEmpty
                           ? const Center(
                               child: Text('Pas de données'),
@@ -53,8 +53,16 @@ class _FilterableListWidgetState<T> extends State<FilterableListWidget> {
                           : ListView.builder(
                               shrinkWrap: true,
                               itemCount: data.length,
-                              itemBuilder: (context, index) =>
-                                  widget.itemBuilder(context, data[index]))),
+                              itemBuilder: (context, index) => GestureDetector(
+                                onTap: () => context
+                                    .push('/${widget.route}/${data[index].id}'),
+                                onLongPress: () {
+                                  //todo
+                                },
+                                child: widget.itemBuilder(context, data[index]),
+                              ),
+                            ),
+                    ),
               onRefresh: () async => await requestData()),
         )
       ],

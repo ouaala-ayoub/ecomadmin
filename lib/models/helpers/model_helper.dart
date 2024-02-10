@@ -20,8 +20,20 @@ class ModelHelper extends Helper {
   Future<Either<dynamic, List<dynamic>>> fetshAll() async {
     try {
       final res = await _api.fetshAll();
-      logger.i('route from api $route');
       return Right(res.map((e) => converterMethod(e)).toList());
+    } on DioException catch (dioException) {
+      logger.e(dioException.response?.data['message']);
+      throw Exception(dioException);
+    } catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<dynamic, List<dynamic>>> getElement(String id) async {
+    try {
+      final res = await _api.fetshById(id);
+      return Right(converterMethod(res));
     } on DioException catch (dioException) {
       logger.e(dioException.response?.data['message']);
       throw Exception(dioException);
