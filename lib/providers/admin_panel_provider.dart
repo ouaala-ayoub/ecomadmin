@@ -1,3 +1,4 @@
+import 'package:ecomadmin/main.dart';
 import 'package:flutter/material.dart';
 
 class AdminPanelProvider extends ChangeNotifier {
@@ -5,6 +6,7 @@ class AdminPanelProvider extends ChangeNotifier {
 
   setIndex(int newIndex) {
     index = newIndex;
+    logger.i(index);
     notifyListeners();
   }
 }

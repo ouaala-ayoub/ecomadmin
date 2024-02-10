@@ -1,6 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-getSessionCookie() async {
+Future<String?> getSessionCookie() async {
   const storage = FlutterSecureStorage();
   final session = await storage.read(key: 'session_cookie');
   return session;
@@ -14,4 +15,9 @@ writeSessionCookie(String cookie) async {
 deleteSessionCookie() async {
   const storage = FlutterSecureStorage();
   await storage.delete(key: 'session_cookie');
+}
+
+getCookieOption() async {
+  final cookie = await getSessionCookie();
+  return Options(headers: {'Cookie': 'session=$cookie'});
 }

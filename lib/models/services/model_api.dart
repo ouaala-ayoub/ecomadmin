@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecomadmin/models/helpers/cookie_helpers.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ModelApi {
@@ -8,7 +9,7 @@ class ModelApi {
 
   Future<List<dynamic>> fetshAll() async {
     final endpoint = '$_baseUrl/$route';
-    final res = await Dio().get(endpoint);
+    final res = await Dio().get(endpoint, options: await getCookieOption());
     return res.data;
   }
   // Future<Either<dynamic, T>> fetshById(String id) {}

@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/helper.dart';
 import 'package:ecomadmin/models/services/model_api.dart';
 
@@ -14,7 +16,11 @@ class ModelHelper extends Helper {
   Future<Either<dynamic, List<dynamic>>> fetshAll() async {
     try {
       final res = await _api.fetshAll();
-      return Right(res.map((e) => converterMethod(res)).toList());
+      // logger.i(res);
+      return Right(res.map((e) => converterMethod(e)).toList());
+    } on DioException catch (dioException) {
+      logger.e(dioException.response?.data['message']);
+      throw Exception(dioException);
     } catch (e) {
       return Left(e);
     }

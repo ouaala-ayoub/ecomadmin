@@ -1,5 +1,8 @@
+import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/admin.dart';
-import 'package:ecomadmin/models/core/helper.dart';
+import 'package:ecomadmin/models/core/category.dart';
+import 'package:ecomadmin/models/core/order.dart';
+import 'package:ecomadmin/models/core/product.dart';
 import 'package:ecomadmin/models/helpers/model_helper.dart';
 import 'package:ecomadmin/providers/admin_panel_provider.dart';
 import 'package:ecomadmin/providers/auth_provider.dart';
@@ -16,41 +19,61 @@ class Holder {
   Holder({required this.converter, required this.builder, required this.route});
 }
 
-class AdminPanel extends StatelessWidget {
+class AdminPanel extends StatefulWidget {
   final AuthProvider authProvider;
   final AdminPanelProvider panelProvider;
   static const titles = ['Produits', 'Commandes', 'Categories', 'Admins'];
-  final widgets = [
+  static final holders = [
+    Holder(
+        converter: (res) => Product.fromMap(res),
+        builder: (context, data) => Text(data.toString()),
+        route: 'products'),
+    Holder(
+        converter: (res) => Order.fromMap(res),
+        builder: (context, data) => Text(data.toString()),
+        route: 'orders'),
+    Holder(
+        converter: (res) => Category.fromMap(res),
+        builder: (context, data) => Text(data.toString()),
+        route: 'categories'),
     Holder(
         converter: (res) => Admin.fromMap(res),
         builder: (context, data) => Text(data.toString()),
         route: 'admins'),
-  ]
-      .map(
-        (element) => ChangeNotifierProvider(
-          create: (context) => FilterableListProvider(
-            ModelHelper(
-                converterMethod: element.converter, route: element.route),
-          ),
-          child: Consumer<FilterableListProvider>(
-            builder: (context, provider, child) => FilterableListWidget(
-                itemBuilder: element.builder, provider: provider),
-          ),
-        ),
-      )
-      .toList();
-  // static List<Widget> widgets = [Admin]
-  //     .map((type) => ChangeNotifierProvider(
-  //         create: (context) => FilterableListProvider<>()))
-  //     .toList();
-  AdminPanel(
+  ];
+
+  const AdminPanel(
       {required this.authProvider, super.key, required this.panelProvider});
+
+  @override
+  State<AdminPanel> createState() => _AdminPanelState();
+}
+
+class _AdminPanelState extends State<AdminPanel> {
+  final widgets = AdminPanel.holders.map(
+    (element) {
+      final index = AdminPanel.holders.indexOf(element);
+      logger.i(index);
+      return ChangeNotifierProvider(
+        create: (context) => FilterableListProvider(
+          ModelHelper(converterMethod: element.converter, route: element.route),
+        ),
+        child: Consumer<FilterableListProvider>(
+          builder: (context, provider, child) => FilterableListWidget(
+              itemBuilder: element.builder, provider: provider),
+        ),
+      );
+    },
+  ).toList();
+
+  // final widgets = [Text('0'), Text('1'), Text('2'), Text("3")];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(titles[panelProvider.index])),
-      body: widgets[0],
+      appBar:
+          AppBar(title: Text(AdminPanel.titles[widget.panelProvider.index])),
+      body: widgets[widget.panelProvider.index],
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -63,12 +86,12 @@ class AdminPanel extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 )),
             Column(
-              children: titles.map((element) {
-                final index = titles.indexOf(element);
+              children: AdminPanel.titles.map((element) {
+                final index = AdminPanel.titles.indexOf(element);
                 return ListTile(
                   title: Text(element),
                   onTap: () {
-                    panelProvider.setIndex(index);
+                    widget.panelProvider.setIndex(index);
                     context.pop();
                   },
                 );
@@ -76,7 +99,7 @@ class AdminPanel extends StatelessWidget {
             ),
             ListTile(
               title: const Text('Logout'),
-              onTap: () => authProvider.logout(),
+              onTap: () => widget.authProvider.logout(),
             ),
           ],
         ),

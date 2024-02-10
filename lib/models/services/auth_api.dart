@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/helpers/cookie_helpers.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthApi {
-  static const baseUrl = 'https://e-com-test-1mmf.onrender.com/auth';
+  static final baseUrl = '${dotenv.env['BASE_URL']}/auth';
   static Future<dynamic> getAuth() async {
-    const endpoint = baseUrl;
+    final endpoint = baseUrl;
     final cookie = await getSessionCookie();
+    logger.i(cookie);
     final res = await Dio().get(endpoint,
         options: Options(headers: {'Cookie': 'session=$cookie'}));
     logger.i(res.data);
@@ -15,7 +17,7 @@ class AuthApi {
   }
 
   static Future<dynamic> login(String username, String password) async {
-    const endpoint = "$baseUrl/login";
+    final endpoint = "$baseUrl/login";
     final creds = {'username': username, 'password': password};
     final res = await Dio().post(
       endpoint,
