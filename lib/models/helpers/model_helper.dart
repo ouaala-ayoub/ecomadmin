@@ -5,9 +5,13 @@ import 'package:ecomadmin/models/core/helper.dart';
 import 'package:ecomadmin/models/services/model_api.dart';
 
 class ModelHelper extends Helper {
-  ModelHelper({required this.converterMethod, required this.route})
-      : _api = ModelApi(route: route);
+  ModelHelper({required this.route, required this.converterMethod})
+      : _api = ModelApi(route: route),
+        super(route: route) {
+    logger.d('helper with route $route');
+  }
 
+  @override
   final String route;
   final dynamic Function(dynamic) converterMethod;
   final ModelApi _api;
@@ -16,7 +20,7 @@ class ModelHelper extends Helper {
   Future<Either<dynamic, List<dynamic>>> fetshAll() async {
     try {
       final res = await _api.fetshAll();
-      // logger.i(res);
+      logger.i('route from api $route');
       return Right(res.map((e) => converterMethod(e)).toList());
     } on DioException catch (dioException) {
       logger.e(dioException.response?.data['message']);

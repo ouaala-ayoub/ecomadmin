@@ -1,4 +1,6 @@
 class Helper {
+  Helper({required this.route});
+  final String route;
   fetshAll() {}
   deleteElement(String id) {}
   postElement(dynamic object) {}

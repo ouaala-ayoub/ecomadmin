@@ -1,4 +1,3 @@
-import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/admin.dart';
 import 'package:ecomadmin/models/core/category.dart';
 import 'package:ecomadmin/models/core/order.dart';
@@ -23,6 +22,7 @@ class AdminPanel extends StatefulWidget {
   final AuthProvider authProvider;
   final AdminPanelProvider panelProvider;
   static const titles = ['Produits', 'Commandes', 'Categories', 'Admins'];
+  static final keys = [GlobalKey(), GlobalKey(), GlobalKey(), GlobalKey()];
   static final holders = [
     Holder(
         converter: (res) => Product.fromMap(res),
@@ -30,15 +30,21 @@ class AdminPanel extends StatefulWidget {
         route: 'products'),
     Holder(
         converter: (res) => Order.fromMap(res),
-        builder: (context, data) => Text(data.toString()),
+        builder: (context, data) => Text(
+              data.toString(),
+            ),
         route: 'orders'),
     Holder(
         converter: (res) => Category.fromMap(res),
-        builder: (context, data) => Text(data.toString()),
+        builder: (context, data) => Text(
+              data.toString(),
+            ),
         route: 'categories'),
     Holder(
         converter: (res) => Admin.fromMap(res),
-        builder: (context, data) => Text(data.toString()),
+        builder: (context, data) => Text(
+              data.toString(),
+            ),
         route: 'admins'),
   ];
 
@@ -53,14 +59,17 @@ class _AdminPanelState extends State<AdminPanel> {
   final widgets = AdminPanel.holders.map(
     (element) {
       final index = AdminPanel.holders.indexOf(element);
-      logger.i(index);
-      return ChangeNotifierProvider(
-        create: (context) => FilterableListProvider(
+      return ChangeNotifierProvider.value(
+        value: FilterableListProvider(
           ModelHelper(converterMethod: element.converter, route: element.route),
         ),
-        child: Consumer<FilterableListProvider>(
+        builder: (context, child) => Consumer<FilterableListProvider>(
           builder: (context, provider, child) => FilterableListWidget(
-              itemBuilder: element.builder, provider: provider),
+            key: AdminPanel.keys[index],
+            itemBuilder: element.builder,
+            provider: provider,
+            route: element.route,
+          ),
         ),
       );
     },

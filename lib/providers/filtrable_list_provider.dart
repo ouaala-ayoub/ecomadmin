@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
+import 'package:ecomadmin/main.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-
 import '../models/core/helper.dart';
 
 class FilterableListProvider extends ChangeNotifier {
-  FilterableListProvider(this.helper);
+  FilterableListProvider(this.helper) {
+    logger.i('provider with helper of route ${helper.route}');
+  }
 
   final Helper helper;
-  final logger = Logger();
   bool loading = false;
   Either<dynamic, List<dynamic>> list = const Right([]);
   Either<dynamic, List<dynamic>> _found = const Right([]);
