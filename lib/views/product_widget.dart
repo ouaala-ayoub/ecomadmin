@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/product.dart';
 import 'package:ecomadmin/models/helpers/function_helpers.dart';
 import 'package:flutter/material.dart';
