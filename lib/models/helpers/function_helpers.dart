@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 errorFromStatusCode(int? code) {
   switch (code) {
@@ -38,4 +39,17 @@ Container searchField({required Function(String) onChanged}) {
               borderSide: BorderSide.none),
         ),
       ));
+}
+
+String formatPrice(int? price) {
+  // Using the Flutter's NumberFormat class for currency formatting
+  final formatter = NumberFormat.currency(
+    //todo dirham at the right
+    customPattern: '#,##0.00 \u00A4',
+    symbol: 'MAD', // You can customize the currency symbol
+    decimalDigits: 0, // Specify the number of decimal places
+  );
+
+  // Format the price and return as a string
+  return price != null ? formatter.format(price) : '-';
 }

@@ -18,7 +18,9 @@ class ModelApi {
 
   Future<dynamic> fetshById(String id) async {
     final endpoint = '$_baseUrl/$route/$id';
+    logger.i(endpoint);
     final res = await Dio().get(endpoint, options: await getCookieOption());
+    logger.i(res.data);
     return res.data;
   }
   // Future<Either<dynamic, dynamic>> deleteElement(String id) {}

@@ -22,7 +22,6 @@ class ModelHelper extends Helper {
       final res = await _api.fetshAll();
       return Right(res.map((e) => converterMethod(e)).toList());
     } on DioException catch (dioException) {
-      logger.e(dioException.response?.data['message']);
       throw Exception(dioException);
     } catch (e) {
       return Left(e);
@@ -30,12 +29,11 @@ class ModelHelper extends Helper {
   }
 
   @override
-  Future<Either<dynamic, List<dynamic>>> getElement(String id) async {
+  Future<Either<dynamic, dynamic>> getElement(String id) async {
     try {
       final res = await _api.fetshById(id);
       return Right(converterMethod(res));
     } on DioException catch (dioException) {
-      logger.e(dioException.response?.data['message']);
       throw Exception(dioException);
     } catch (e) {
       return Left(e);

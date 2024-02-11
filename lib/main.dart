@@ -1,6 +1,12 @@
+import 'package:ecomadmin/models/core/admin.dart';
+import 'package:ecomadmin/models/core/category.dart';
+import 'package:ecomadmin/models/core/order.dart';
+import 'package:ecomadmin/models/core/product.dart';
+import 'package:ecomadmin/models/helpers/model_helper.dart';
 import 'package:ecomadmin/providers/auth_provider.dart';
 import 'package:ecomadmin/providers/model_page_provider.dart';
 import 'package:ecomadmin/views/home_page.dart';
+import 'package:ecomadmin/views/model_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
@@ -9,34 +15,54 @@ import 'package:provider/provider.dart';
 
 class RouteHolder {
   final String baseRoute;
-  final Widget widget;
-  RouteHolder({required this.baseRoute, required this.widget});
+  final dynamic Function(dynamic) converterMethod;
+  final Widget Function(dynamic) widgetBuilder;
+  RouteHolder(
+      {required this.baseRoute,
+      required this.widgetBuilder,
+      required this.converterMethod});
 }
 
 final routes = [
   RouteHolder(
     baseRoute: 'products',
-    widget: Scaffold(
-      body: Text('products'),
-    ),
+    converterMethod: (res) => Product.fromMap(res),
+    widgetBuilder: (product) {
+      final productInstance = product as Product;
+      return Center(
+        child: Text('${productInstance.id}'),
+      );
+    },
   ),
   RouteHolder(
     baseRoute: 'orders',
-    widget: Scaffold(
-      body: Text('orders'),
-    ),
+    converterMethod: (res) => Order.fromMap(res),
+    widgetBuilder: (order) {
+      final orderInstance = order as Order;
+      return Center(
+        child: Text('${orderInstance.id}'),
+      );
+    },
   ),
   RouteHolder(
     baseRoute: 'categories',
-    widget: Scaffold(
-      body: Text('categories'),
-    ),
+    converterMethod: (res) => Category.fromMap(res),
+    widgetBuilder: (category) {
+      final categoryInstance = category as Category;
+      return Center(
+        child: Text('${categoryInstance.id}'),
+      );
+    },
   ),
   RouteHolder(
     baseRoute: 'admins',
-    widget: Scaffold(
-      body: Text('admins'),
-    ),
+    converterMethod: (res) => Admin.fromMap(res),
+    widgetBuilder: (admin) {
+      final adminInstance = admin as Admin;
+      return Center(
+        child: Text('${adminInstance.id}'),
+      );
+    },
   ),
 ];
 final logger = Logger();
@@ -61,12 +87,18 @@ class MyApp extends StatelessWidget {
             (holder) => GoRoute(
               path: '/${holder.baseRoute}/:id',
               builder: (context, state) => ChangeNotifierProvider.value(
-                  value: ModelPageProvider(),
+                  value: ModelPageProvider(
+                    helper: ModelHelper(
+                        route: holder.baseRoute,
+                        converterMethod: holder.converterMethod),
+                  ),
                   child: Consumer<ModelPageProvider>(
-                    builder: (context, value, child) {
+                    builder: (context, provider, child) {
                       final id = state.pathParameters['id']!;
-                      logger.i('id is $id');
-                      return holder.widget;
+                      return ModelPage(
+                          modelPageProvider: provider,
+                          widgetBuilder: (obj) => holder.widgetBuilder(obj),
+                          modelId: id);
                     },
                   )),
             ),

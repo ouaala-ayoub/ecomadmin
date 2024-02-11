@@ -1,5 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/product.dart';
+import 'package:ecomadmin/models/helpers/function_helpers.dart';
 import 'package:flutter/material.dart';
+
+import 'image_error.dart';
 
 class ProductWidget extends StatelessWidget {
   final Product product;
@@ -7,6 +12,55 @@ class ProductWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    final imageUrl = product.images.isNotEmpty ? product.images[0] : '';
+    return Card(
+      margin: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const SizedBox(height: 5),
+          CachedNetworkImage(
+            fit: BoxFit.fill,
+            // height: 200,
+            imageUrl: imageUrl,
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                SizedBox(
+              height: 200,
+              child: Center(
+                  child: CircularProgressIndicator(
+                      value: downloadProgress.progress)),
+            ),
+            errorWidget: (context, url, error) => const ImageError(),
+          ),
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 10,
+            ),
+            child: Text(
+              product.title ?? '-',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 10,
+            ),
+            child: Text(
+              formatPrice(product.price),
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
