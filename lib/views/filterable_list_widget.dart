@@ -1,4 +1,3 @@
-import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/helpers/function_helpers.dart';
 import 'package:ecomadmin/providers/filtrable_list_provider.dart';
 import 'package:flutter/material.dart';
@@ -8,14 +7,11 @@ class FilterableListWidget extends StatefulWidget {
   final String route;
   final Widget Function(BuildContext, dynamic) itemBuilder;
   final FilterableListProvider provider;
-  FilterableListWidget(
+  const FilterableListWidget(
       {required this.itemBuilder,
       required this.provider,
       super.key,
-      required this.route}) {
-    logger.i('filterable list widget with route $route');
-  }
-
+      required this.route});
   @override
   State<FilterableListWidget> createState() => _FilterableListWidgetState();
 }
@@ -29,13 +25,17 @@ class _FilterableListWidgetState<T> extends State<FilterableListWidget> {
 
   requestData() async {
     await widget.provider.getList();
+    widget.provider.searchController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        searchField(onChanged: (value) => widget.provider.runFilter(value)),
+        searchField(
+          onChanged: (query) => widget.provider.runFilter(query),
+          textFieldController: widget.provider.searchController,
+        ),
         Expanded(
           child: RefreshIndicator.adaptive(
               child: widget.provider.loading

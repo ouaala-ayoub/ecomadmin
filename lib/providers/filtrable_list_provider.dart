@@ -1,13 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:ecomadmin/main.dart';
 import 'package:flutter/material.dart';
 import '../models/core/helper.dart';
 
 class FilterableListProvider extends ChangeNotifier {
-  FilterableListProvider(this.helper) {
-    logger.i('provider with helper of route ${helper.route}');
-  }
+  FilterableListProvider(this.helper);
 
+  final searchController = TextEditingController();
   final Helper helper;
   bool loading = false;
   Either<dynamic, List<dynamic>> list = const Right([]);

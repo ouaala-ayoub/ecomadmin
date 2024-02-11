@@ -12,7 +12,9 @@ errorFromStatusCode(int? code) {
   }
 }
 
-Container searchField({required Function(String) onChanged}) {
+Container searchField(
+    {required Function(String) onChanged,
+    required TextEditingController textFieldController}) {
   return Container(
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(boxShadow: [
@@ -22,6 +24,7 @@ Container searchField({required Function(String) onChanged}) {
             spreadRadius: 0.0)
       ]),
       child: TextField(
+        controller: textFieldController,
         onChanged: (value) {
           onChanged(value);
         },

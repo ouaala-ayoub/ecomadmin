@@ -14,4 +14,14 @@ class ModelPageProvider extends ChangeNotifier {
     loading = false;
     notifyListeners();
   }
+
+  updateModel(String id, dynamic obj,
+      {required Function(dynamic) onFail,
+      required Function(dynamic) onSuccess}) async {
+    loading = true;
+    notifyListeners();
+    final Either<dynamic, dynamic> res = await helper.putElement(id, obj);
+    res.fold((e) => onFail(e), (res) => onSuccess(res));
+    loading = false;
+  }
 }

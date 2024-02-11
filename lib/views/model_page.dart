@@ -29,7 +29,7 @@ class _ModelPageState extends State<ModelPage> {
     return Scaffold(
       appBar: AppBar(title: Text('to change')),
       body: provider.loading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : provider.model.fold((e) => ErrorPage(message: e.toString()),

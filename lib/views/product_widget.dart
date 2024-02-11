@@ -15,12 +15,12 @@ class ProductWidget extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.all(10),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: 5),
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 10),
           CachedNetworkImage(
-            fit: BoxFit.fill,
-            // height: 200,
+            fit: BoxFit.fitWidth,
+            height: 200,
             imageUrl: imageUrl,
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 SizedBox(
@@ -58,6 +58,7 @@ class ProductWidget extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 5),
         ],
       ),
     );
