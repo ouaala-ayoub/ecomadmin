@@ -1,3 +1,4 @@
+import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/providers/product_post_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,27 +17,47 @@ class ProductPostWidget extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          formTf('Titre', TextInputType.text),
+          formTf('Titre', TextInputType.text,
+              controller: provider.body['title']),
           const SizedBox(
             height: 15,
           ),
-          formTf(
-            'Prix',
-            TextInputType.number,
-            formatters: [FilteringTextInputFormatter.digitsOnly],
-          ),
+          formTf('Prix', TextInputType.number,
+              formatters: [FilteringTextInputFormatter.digitsOnly],
+              controller: provider.body['price']),
           const SizedBox(
             height: 10,
           ),
-          FilledButton(
-            onPressed: () async {
-              //todo do the images pick logic
-              final imagePicker = ImagePicker();
-              final images = await imagePicker.pickMultiImage();
+          FormField<List<XFile>>(
+            initialValue: provider.body['images'],
+            validator: (value) {
+              logger.d(value);
+              return value?.isEmpty == true ? 'Choisissez des images !' : null;
             },
-            child: Row(
+            builder: (state) => Column(
               mainAxisSize: MainAxisSize.min,
-              children: [Icon(Icons.add), Text('ajouter des images')],
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () async {
+                      //todo do the images pick logic
+                      final imagePicker = ImagePicker();
+                      final images = await imagePicker.pickMultiImage();
+                      provider.addImages(images);
+                    },
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [Icon(Icons.add), Text('ajouter des images')],
+                    ),
+                  ),
+                ),
+                if (state.errorText != null)
+                  Text(
+                    state.errorText!,
+                    style: TextStyle(color: Colors.red),
+                  )
+              ],
             ),
           ),
           //to add images
@@ -44,13 +65,32 @@ class ProductPostWidget extends StatelessWidget {
           const SizedBox(
             height: 15,
           ),
+          // DropdownButtonFormField<String>(
+          //   value: //todo,
+          //   items: [
+          //     DropdownMenuItem(
+          //       child: Text('testing'),
+          //     ),
+          //     DropdownMenuItem(
+          //       child: Text('testing'),
+          //     ),
+          //     DropdownMenuItem(
+          //       child: Text('testing'),
+          //     ),
+          //     DropdownMenuItem(
+          //       child: Text('testing'),
+          //     ),
+          //   ],
+          //   onChanged: (value) {},
+          // ),
         ],
       ),
     );
   }
 
   TextFormField formTf(String text, inputType,
-      {List<TextInputFormatter>? formatters}) {
+      {List<TextInputFormatter>? formatters,
+      required TextEditingController controller}) {
     return TextFormField(
       decoration: InputDecoration(
         label: Text(text),
