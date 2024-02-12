@@ -23,5 +23,12 @@ class ModelApi {
     logger.i(res.data);
     return res.data;
   }
+
+  Future<dynamic> postModel(Map<String, dynamic> body) async {
+    final endpoint = '$_baseUrl/$route';
+    final res = await Dio().post(endpoint, options: await getCookieOption());
+    return res.data;
+  }
+
   // Future<Either<dynamic, dynamic>> deleteElement(String id) {}
 }

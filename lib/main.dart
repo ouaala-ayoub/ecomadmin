@@ -5,8 +5,11 @@ import 'package:ecomadmin/models/core/product.dart';
 import 'package:ecomadmin/models/helpers/model_helper.dart';
 import 'package:ecomadmin/providers/auth_provider.dart';
 import 'package:ecomadmin/providers/model_page_provider.dart';
+import 'package:ecomadmin/providers/product_post_provider.dart';
 import 'package:ecomadmin/views/home_page.dart';
 import 'package:ecomadmin/views/model_page.dart';
+import 'package:ecomadmin/views/model_post.widget.dart';
+import 'package:ecomadmin/views/product_post_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
@@ -104,6 +107,24 @@ class MyApp extends StatelessWidget {
             ),
           )
           .toList(),
+      GoRoute(
+        path: '/add/products',
+        builder: (context, state) => ChangeNotifierProvider(
+          create: (context) => ProductPostProvider(
+            helper: ModelHelper(
+              route: 'products',
+              converterMethod: null,
+            ),
+          ),
+          child: Consumer<ProductPostProvider>(
+            builder: (context, provider, child) => ModelPostWidget(
+              formBuilder: (provider) =>
+                  ProductPostWidget(provider: provider as ProductPostProvider),
+              provider: provider,
+            ),
+          ),
+        ),
+      )
     ],
   );
 

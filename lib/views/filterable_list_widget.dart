@@ -54,8 +54,14 @@ class _FilterableListWidgetState<T> extends State<FilterableListWidget> {
                               shrinkWrap: true,
                               itemCount: data.length,
                               itemBuilder: (context, index) => GestureDetector(
-                                onTap: () => context
-                                    .push('/${widget.route}/${data[index].id}'),
+                                onTap: () async {
+                                  final added = await context.push(
+                                      '/${widget.route}/${data[index].id}');
+
+                                  if (added == true) {
+                                    requestData();
+                                  }
+                                },
                                 onLongPress: () {
                                   //todo
                                 },

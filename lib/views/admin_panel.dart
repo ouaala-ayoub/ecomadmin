@@ -114,6 +114,17 @@ class _AdminPanelState extends State<AdminPanel> {
           ],
         ),
       ),
+      floatingActionButton: widget.panelProvider.index != 1
+          ? FloatingActionButton(
+              onPressed: () => context.push(
+                '/add/${AdminPanel.holders[widget.panelProvider.index].route}',
+              ),
+              child: const Icon(
+                Icons.add_circle_sharp,
+                color: Colors.black,
+              ),
+            )
+          : null,
     );
   }
 }

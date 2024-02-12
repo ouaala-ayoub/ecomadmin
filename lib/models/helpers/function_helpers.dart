@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 errorFromStatusCode(int? code) {
@@ -10,6 +11,22 @@ errorFromStatusCode(int? code) {
     default:
       return null;
   }
+}
+
+Future showInformativeDialog(
+    BuildContext context, String content, String title) {
+  return showAdaptiveDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+            title: Text(title),
+            content: Text(content),
+            actions: [
+              FilledButton(
+                onPressed: () => context.pop(),
+                child: Text('OK'),
+              )
+            ],
+          ));
 }
 
 Container searchField(

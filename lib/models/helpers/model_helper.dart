@@ -13,14 +13,14 @@ class ModelHelper extends Helper {
 
   @override
   final String route;
-  final dynamic Function(dynamic) converterMethod;
+  final dynamic Function(dynamic)? converterMethod;
   final ModelApi _api;
 
   @override
   Future<Either<dynamic, List<dynamic>>> fetshAll() async {
     try {
       final res = await _api.fetshAll();
-      return Right(res.map((e) => converterMethod(e)).toList());
+      return Right(res.map((e) => converterMethod?.call(e)).toList());
     } on DioException catch (dioException) {
       throw Exception(dioException);
     } catch (e) {
@@ -32,9 +32,19 @@ class ModelHelper extends Helper {
   Future<Either<dynamic, dynamic>> getElement(String id) async {
     try {
       final res = await _api.fetshById(id);
-      return Right(converterMethod(res));
+      return Right(converterMethod?.call(res));
     } on DioException catch (dioException) {
       throw Exception(dioException);
+    } catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<dynamic, dynamic>> postElement(dynamic object) async {
+    try {
+      final res = await _api.postModel(object);
+      return Right(res);
     } catch (e) {
       return Left(e);
     }
