@@ -9,6 +9,7 @@ class ProductPostProvider extends ModelPostProvider {
     'title': TextEditingController(),
     'price': TextEditingController(),
     "images": <XFile>[],
+    'description': TextEditingController()
   };
 
   @override
@@ -16,6 +17,18 @@ class ProductPostProvider extends ModelPostProvider {
 
   addImages(List<XFile> images) {
     body['images'].addAll(images);
+    notifyListeners();
+  }
+
+  @override
+  processData() {
+    body['title'] = body['title'].text;
+    body['price'] = body['price'].text;
+    //body['images'] = await uploadImages(body['images']);
+  }
+
+  void removeFile(XFile file) {
+    body['images'].remove(file);
     notifyListeners();
   }
 }

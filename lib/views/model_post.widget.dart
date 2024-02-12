@@ -21,31 +21,38 @@ class ModelPostWidget extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          FilledButton(
-            onPressed: () {
-              if (provider.formKey.currentState!.validate()) {
-                provider.addModel(
-                  provider.body,
-                  onSuccess: (res) {
-                    logger.i(res);
-                    const snackBar = SnackBar(
-                      content: Text('Ajoutée avec success'),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () {
+                  if (provider.formKey.currentState!.validate()) {
+                    provider.processData();
+                    provider.addModel(
+                      provider.body,
+                      onSuccess: (res) {
+                        logger.i(res);
+                        const snackBar = SnackBar(
+                          content: Text('Ajoutée avec success'),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        context.pop();
+                      },
+                      onFail: (e) {
+                        logger.e(e);
+                        showInformativeDialog(
+                          context,
+                          'Erreur innatendue , réessayer',
+                          'erreur',
+                        );
+                      },
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    context.pop();
-                  },
-                  onFail: (e) {
-                    logger.e(e);
-                    showInformativeDialog(
-                      context,
-                      'Erreur innatendue , réessayer',
-                      'erreur',
-                    );
-                  },
-                );
-              }
-            },
-            child: const Text('Ajouter'),
+                  }
+                },
+                child: const Text('Ajouter'),
+              ),
+            ),
           ),
           const SizedBox(
             height: 10,

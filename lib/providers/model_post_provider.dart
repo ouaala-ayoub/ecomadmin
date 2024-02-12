@@ -11,7 +11,7 @@ class ModelPostProvider extends ChangeNotifier {
   GlobalKey<FormState> get formKey => _formKey;
   bool loading = false;
   Map<String, dynamic> body = {};
-  Helper helper;
+  final Helper helper;
 
   addModel(Map<String, dynamic> body,
       {required Function(dynamic) onSuccess,
@@ -23,4 +23,6 @@ class ModelPostProvider extends ChangeNotifier {
     loading = false;
     notifyListeners();
   }
+
+  processData() {}
 }

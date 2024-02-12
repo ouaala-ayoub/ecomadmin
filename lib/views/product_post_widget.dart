@@ -1,8 +1,12 @@
 import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/providers/product_post_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'image_widget.dart';
 
 class ProductPostWidget extends StatelessWidget {
   const ProductPostWidget({super.key, required this.provider});
@@ -29,6 +33,7 @@ class ProductPostWidget extends StatelessWidget {
             height: 10,
           ),
           FormField<List<XFile>>(
+            autovalidateMode: AutovalidateMode.always,
             initialValue: provider.body['images'],
             validator: (value) {
               logger.d(value);
@@ -61,6 +66,32 @@ class ProductPostWidget extends StatelessWidget {
             ),
           ),
           //to add images
+          const SizedBox(
+            height: 10,
+          ),
+          if (provider.body['images'].isNotEmpty)
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: provider.body['images'].length,
+              itemBuilder: (context, index) => ImageWidget(
+                  file: provider.body['images'][index] as XFile,
+                  onLongPress: (file) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) => CupertinoActionSheet(
+                        actions: [
+                          CupertinoActionSheetAction(
+                              onPressed: () {
+                                provider.removeFile(file);
+                                context.pop();
+                              },
+                              child: Text("Supprimer"))
+                        ],
+                      ),
+                    );
+                  }),
+            ),
+
           // ListView.builder(itemBuilder: (context, index) => Image(),)
           const SizedBox(
             height: 15,
