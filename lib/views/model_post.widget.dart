@@ -14,53 +14,57 @@ class ModelPostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Ajouter')),
-      body: Form(
-        key: provider.formKey,
-        child: Column(children: [
-          Expanded(child: formBuilder(provider)),
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: () async {
-                  if (provider.formKey.currentState!.validate()) {
-                    //todo add a confirmation dialog
-                    final req = await provider.processData();
-                    logger.i('req is $req');
-                    provider.addModel(
-                      req,
-                      onSuccess: (res) {
-                        logger.i(res);
-                        const snackBar = SnackBar(
-                          content: Text('Ajoutée avec success'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        context.pop(true);
+      body: provider.loading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Form(
+              key: provider.formKey,
+              child: Column(children: [
+                Expanded(child: formBuilder(provider)),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () async {
+                        if (provider.formKey.currentState!.validate()) {
+                          //todo add a confirmation dialog
+
+                          provider.addModel(
+                            provider.body,
+                            onSuccess: (res) {
+                              logger.i(res);
+                              const snackBar = SnackBar(
+                                content: Text('Ajoutée avec success'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              context.pop(true);
+                            },
+                            onFail: (e) {
+                              logger.e(e);
+                              showInformativeDialog(
+                                context,
+                                'Erreur innatendue , réessayer',
+                                'erreur',
+                              );
+                            },
+                          );
+                        }
                       },
-                      onFail: (e) {
-                        logger.e(e);
-                        showInformativeDialog(
-                          context,
-                          'Erreur innatendue , réessayer',
-                          'erreur',
-                        );
-                      },
-                    );
-                  }
-                },
-                child: const Text('Ajouter'),
-              ),
+                      child: const Text('Ajouter'),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ]),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-        ]),
-      ),
     );
   }
 }

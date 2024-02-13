@@ -18,7 +18,8 @@ class ModelPostProvider extends ChangeNotifier {
       required Function(dynamic) onFail}) async {
     loading = true;
     notifyListeners();
-    final Either<dynamic, dynamic> res = await helper.postElement(body);
+    final req = await processData();
+    final Either<dynamic, dynamic> res = await helper.postElement(req);
     res.fold((e) => onFail(e), (res) => onSuccess(res));
     loading = false;
     notifyListeners();

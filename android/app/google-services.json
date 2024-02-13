@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "39349552029",
+    "firebase_url": "https://e-com-27b28-default-rtdb.firebaseio.com",
+    "project_id": "e-com-27b28",
+    "storage_bucket": "e-com-27b28.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39349552029:android:ba6b583ec823e7e326a574",
+        "android_client_info": {
+          "package_name": "com.example.ecomadmin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6NJ55pPKvmz6knGJyWapRYmo0UAog23o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

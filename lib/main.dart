@@ -1,3 +1,4 @@
+import 'package:ecomadmin/firebase_options.dart';
 import 'package:ecomadmin/models/core/admin.dart';
 import 'package:ecomadmin/models/core/category.dart';
 import 'package:ecomadmin/models/core/order.dart';
@@ -10,6 +11,7 @@ import 'package:ecomadmin/views/home_page.dart';
 import 'package:ecomadmin/views/model_page.dart';
 import 'package:ecomadmin/views/model_post.widget.dart';
 import 'package:ecomadmin/views/product_post_widget.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
@@ -71,6 +73,10 @@ final routes = [
 final logger = Logger();
 void main() async {
   await dotenv.load(fileName: '.env');
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   //todo initilise firebase app
   runApp(MyApp());
 }
