@@ -26,9 +26,11 @@ class ModelPostWidget extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: () {
+                onPressed: () async {
                   if (provider.formKey.currentState!.validate()) {
-                    final req = provider.processData();
+                    //todo add a confirmation dialog
+                    final req = await provider.processData();
+                    logger.i('req is $req');
                     provider.addModel(
                       req,
                       onSuccess: (res) {
@@ -37,7 +39,7 @@ class ModelPostWidget extends StatelessWidget {
                           content: Text('Ajoutée avec success'),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        context.pop();
+                        context.pop(true);
                       },
                       onFail: (e) {
                         logger.e(e);

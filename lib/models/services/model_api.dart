@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/helpers/cookie_helpers.dart';
@@ -26,7 +28,11 @@ class ModelApi {
 
   Future<dynamic> postModel(Map<String, dynamic> body) async {
     final endpoint = '$_baseUrl/$route';
-    final res = await Dio().post(endpoint, options: await getCookieOption());
+    final res = await Dio().post(
+      endpoint,
+      options: await getCookieOption(),
+      data: jsonEncode(body),
+    );
     return res.data;
   }
 

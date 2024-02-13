@@ -1,5 +1,9 @@
+import 'dart:math';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 errorFromStatusCode(int? code) {
@@ -72,4 +76,24 @@ String formatPrice(int? price) {
 
   // Format the price and return as a string
   return price != null ? formatter.format(price) : '-';
+}
+
+String createUniqueImageName({required String extension}) {
+  final random = Random.secure();
+  final now = DateTime.now().millisecondsSinceEpoch;
+  final bytes =
+      Uint8List.fromList(List.generate(6, (_) => random.nextInt(256)));
+  final hex =
+      bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join('');
+  return '$now.$hex.$extension';
+}
+
+String getFileExtension(XFile xFile) {
+  String path = xFile.path;
+  int dotIndex = path.lastIndexOf('.');
+  if (dotIndex != -1 && dotIndex < path.length - 1) {
+    String extension = path.substring(dotIndex + 1);
+    return extension;
+  }
+  return 'unknown';
 }

@@ -42,9 +42,13 @@ class ModelHelper extends Helper {
 
   @override
   Future<Either<dynamic, dynamic>> postElement(dynamic object) async {
+    logger.d(object);
     try {
       final res = await _api.postModel(object);
       return Right(res);
+    } on DioException catch (dioException) {
+      logger.e(dioException.response?.data['message']);
+      return Left(dioException.response?.data['message']);
     } catch (e) {
       return Left(e);
     }

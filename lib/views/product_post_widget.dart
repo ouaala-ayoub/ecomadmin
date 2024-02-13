@@ -1,4 +1,5 @@
 import 'package:ecomadmin/main.dart';
+import 'package:ecomadmin/models/core/category.dart';
 import 'package:ecomadmin/providers/product_post_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,20 +33,20 @@ class _ProductPostWidgetState extends State<ProductPostWidget> {
           const SizedBox(
             height: 10,
           ),
-          formTf('Titre', TextInputType.text,
+          formTf('Entrez le Titre', TextInputType.text,
               controller: widget.provider.body['title']),
           const SizedBox(
             height: 15,
           ),
-          formTf('Prix', TextInputType.number,
+          formTf('Entrez le Prix', TextInputType.number,
               formatters: [FilteringTextInputFormatter.digitsOnly],
               controller: widget.provider.body['price']),
           const SizedBox(
             height: 10,
           ),
           FormField<List<XFile>>(
-            autovalidateMode: AutovalidateMode.always,
             initialValue: widget.provider.body['images'],
+            autovalidateMode: AutovalidateMode.always,
             validator: (value) {
               logger.d(value);
               return value?.isEmpty == true ? 'Choisissez des images !' : null;
@@ -82,6 +83,7 @@ class _ProductPostWidgetState extends State<ProductPostWidget> {
           ),
           if (widget.provider.body['images'].isNotEmpty)
             ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: widget.provider.body['images'].length,
               itemBuilder: (context, index) => ImageWidget(
@@ -106,85 +108,163 @@ class _ProductPostWidgetState extends State<ProductPostWidget> {
           const SizedBox(
             height: 15,
           ),
-          FormField<String?>(
+          FormField<Category?>(
             initialValue: widget.provider.body['category'],
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              logger.i('category value $value');
+              if (value == null) {
                 return 'Entrer une catégorie';
               } else {
                 return null;
               }
             },
-            builder: (field) => widget.provider.categoriesLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : widget.provider.categories.fold(
-                    (l) => OutlinedButton(
-                        onPressed: () => widget.provider.fetshCategories(),
-                        child: const Column(
-                          children: [
-                            Text('Erreur de chargement des categories'),
-                            Text('refresh'),
-                          ],
-                        )),
-                    (categories) => DropdownButtonFormField<String?>(
-                      decoration:
-                          const InputDecoration(label: Text('Categories')),
-                      value: widget.provider.body['category'],
-                      items: categories
-                          .map(
-                            (c) => DropdownMenuItem<String>(
-                              child: Text('${c.title}'),
-                              //!the value of category is id
-                              value: c.id,
+            builder: (state) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                widget.provider.categoriesLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : widget.provider.categories.fold(
+                        (l) => OutlinedButton(
+                            onPressed: () => widget.provider.fetshCategories(),
+                            child: const Column(
+                              children: [
+                                Text('Erreur de chargement des categories'),
+                                Text('refresh'),
+                              ],
+                            )),
+                        (categories) => DropdownButtonFormField<Category>(
+                          decoration: InputDecoration(
+                            label: const Text('Categories'),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                          )
-                          .toList(),
-                      onChanged: (value) =>
-                          widget.provider.setField('category', value),
-                    ),
+                          ),
+                          value: widget.provider.body['category'],
+                          items: categories
+                              .map(
+                                (c) => DropdownMenuItem<Category>(
+                                  //!the value of category is id
+                                  value: c,
+                                  child: Text('${c.title}'),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            widget.provider.setField('category', value);
+                            state.didChange(value);
+                          },
+                        ),
+                      ),
+                if (state.errorText != null)
+                  Text(
+                    state.errorText!,
+                    style: const TextStyle(color: Colors.red),
                   ),
-          )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          FormField<String?>(
+            initialValue: widget.provider.body['subcategory'],
+            validator: (value) {
+              // logger.i(value);
+              if (value == null) {
+                return 'Entrer une subcategory';
+              } else {
+                return null;
+              }
+            },
+            builder: (state) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                widget.provider.categoriesLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : widget.provider.subcategories.fold(
+                        (l) => OutlinedButton(
+                            onPressed: () {},
+                            child: const Column(
+                              children: [
+                                Text('Erreur de chargement des subcategories'),
+                                Text('refresh'),
+                              ],
+                            )),
+                        (subcategories) => DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            label: const Text('Subcategories'),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          value: widget.provider.body['subcategory'],
+                          items: subcategories
+                              .map(
+                                (c) => DropdownMenuItem<String>(
+                                  //!the value of category is id
 
-          // DropdownButtonFormField<String>(
-          //   value: //todo,
-          //   items: [
-          //     DropdownMenuItem(
-          //       child: Text('testing'),
-          //     ),
-          //     DropdownMenuItem(
-          //       child: Text('testing'),
-          //     ),
-          //     DropdownMenuItem(
-          //       child: Text('testing'),
-          //     ),
-          //     DropdownMenuItem(
-          //       child: Text('testing'),
-          //     ),
-          //   ],
-          //   onChanged: (value) {},
-          // ),
+                                  value: c,
+                                  child: Text(c),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            widget.provider.setField('subcategory', value);
+                            state.didChange(value);
+                          },
+                        ),
+                      ),
+                if (state.errorText != null)
+                  Text(
+                    state.errorText!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          formTf(
+            "Entrez la Description",
+            TextInputType.text,
+            controller: widget.provider.body['description'],
+            lines: 5,
+            labelBehaviour: FloatingLabelBehavior.always,
+          ),
         ],
       ),
     );
   }
 
-  TextFormField formTf(String text, inputType,
-      {List<TextInputFormatter>? formatters,
-      required TextEditingController controller}) {
+  TextFormField formTf(
+    String text,
+    TextInputType? inputType, {
+    List<TextInputFormatter>? formatters,
+    required TextEditingController controller,
+    int? lines,
+    FloatingLabelBehavior? labelBehaviour,
+  }) {
     return TextFormField(
       decoration: InputDecoration(
         label: Text(text),
+        floatingLabelBehavior: labelBehaviour,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
         ),
       ),
+      controller: controller,
       inputFormatters: formatters,
       keyboardType: inputType,
+      maxLines: lines,
+      minLines: lines,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Entrez le $text';
+          return text;
         }
         return null;
       },

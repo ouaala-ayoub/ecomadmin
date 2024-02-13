@@ -71,6 +71,7 @@ final routes = [
 final logger = Logger();
 void main() async {
   await dotenv.load(fileName: '.env');
+  //todo initilise firebase app
   runApp(MyApp());
 }
 

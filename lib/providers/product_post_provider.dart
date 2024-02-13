@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/category.dart';
+import 'package:ecomadmin/models/helpers/images_uploader.dart';
 import 'package:ecomadmin/models/helpers/model_helper.dart';
 import 'package:ecomadmin/providers/model_post_provider.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,7 @@ class ProductPostProvider extends ModelPostProvider {
   ProductPostProvider({required super.helper});
 
   late Either<dynamic, List<Category>> categories;
+  late Either<dynamic, List<String>> subcategories = const Right([]);
   bool categoriesLoading = true;
 
   final Map<String, dynamic> _body = {
@@ -30,18 +31,43 @@ class ProductPostProvider extends ModelPostProvider {
   }
 
   setField(String key, dynamic value) {
-    logger.i(value);
     body[key] = value;
+    if (key == "category") {
+      getSubcategories(value as Category);
+    }
+    // logger.i("category body value is ${body[key]}");
     notifyListeners();
+  }
+
+  getSubcategories(Category? category) {
+    subcategories = categories.fold(
+      (l) => Left(l),
+      (categories) => Right(
+        categories
+                .firstWhere(
+                  (element) => element.id == category?.id,
+                )
+                .subcategories ??
+            [],
+      ),
+    );
   }
 
   //todo images upload
   @override
-  Map<String, dynamic> processData() => {
-        'title': body['title'].text,
-        'price': body['price'].text,
-        'images': [],
-      };
+  Future<Map<String, dynamic>> processData() async {
+    final images = await ImagesUploader.uploadImages(body['images']);
+    return images.fold(
+        (e) => {},
+        (images) => {
+              'title': body['title'].text,
+              'price': body['price'].text,
+              'images': images,
+              'category': body['category']!.title,
+              'subcategory': body['subcategory'],
+              'description': body['description'].text
+            });
+  }
 
   void removeFile(XFile file) {
     body['images'].remove(file);
@@ -59,6 +85,7 @@ class ProductPostProvider extends ModelPostProvider {
         res.map((c) => c as Category).toList(),
       ),
     );
+
     categoriesLoading = false;
     notifyListeners();
   }
