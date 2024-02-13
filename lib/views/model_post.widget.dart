@@ -28,9 +28,9 @@ class ModelPostWidget extends StatelessWidget {
               child: FilledButton(
                 onPressed: () {
                   if (provider.formKey.currentState!.validate()) {
-                    provider.processData();
+                    final req = provider.processData();
                     provider.addModel(
-                      provider.body,
+                      req,
                       onSuccess: (res) {
                         logger.i(res);
                         const snackBar = SnackBar(

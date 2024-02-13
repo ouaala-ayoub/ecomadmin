@@ -8,9 +8,20 @@ import 'package:image_picker/image_picker.dart';
 
 import 'image_widget.dart';
 
-class ProductPostWidget extends StatelessWidget {
+class ProductPostWidget extends StatefulWidget {
   const ProductPostWidget({super.key, required this.provider});
   final ProductPostProvider provider;
+
+  @override
+  State<ProductPostWidget> createState() => _ProductPostWidgetState();
+}
+
+class _ProductPostWidgetState extends State<ProductPostWidget> {
+  @override
+  void initState() {
+    super.initState();
+    widget.provider.fetshCategories();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +33,19 @@ class ProductPostWidget extends StatelessWidget {
             height: 10,
           ),
           formTf('Titre', TextInputType.text,
-              controller: provider.body['title']),
+              controller: widget.provider.body['title']),
           const SizedBox(
             height: 15,
           ),
           formTf('Prix', TextInputType.number,
               formatters: [FilteringTextInputFormatter.digitsOnly],
-              controller: provider.body['price']),
+              controller: widget.provider.body['price']),
           const SizedBox(
             height: 10,
           ),
           FormField<List<XFile>>(
             autovalidateMode: AutovalidateMode.always,
-            initialValue: provider.body['images'],
+            initialValue: widget.provider.body['images'],
             validator: (value) {
               logger.d(value);
               return value?.isEmpty == true ? 'Choisissez des images !' : null;
@@ -49,7 +60,7 @@ class ProductPostWidget extends StatelessWidget {
                       //todo do the images pick logic
                       final imagePicker = ImagePicker();
                       final images = await imagePicker.pickMultiImage();
-                      provider.addImages(images);
+                      widget.provider.addImages(images);
                     },
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
@@ -60,7 +71,7 @@ class ProductPostWidget extends StatelessWidget {
                 if (state.errorText != null)
                   Text(
                     state.errorText!,
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   )
               ],
             ),
@@ -69,12 +80,12 @@ class ProductPostWidget extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          if (provider.body['images'].isNotEmpty)
+          if (widget.provider.body['images'].isNotEmpty)
             ListView.builder(
               shrinkWrap: true,
-              itemCount: provider.body['images'].length,
+              itemCount: widget.provider.body['images'].length,
               itemBuilder: (context, index) => ImageWidget(
-                  file: provider.body['images'][index] as XFile,
+                  file: widget.provider.body['images'][index] as XFile,
                   onLongPress: (file) {
                     showModalBottomSheet(
                       context: context,
@@ -82,20 +93,60 @@ class ProductPostWidget extends StatelessWidget {
                         actions: [
                           CupertinoActionSheetAction(
                               onPressed: () {
-                                provider.removeFile(file);
+                                widget.provider.removeFile(file);
                                 context.pop();
                               },
-                              child: Text("Supprimer"))
+                              child: const Text("Supprimer"))
                         ],
                       ),
                     );
                   }),
             ),
 
-          // ListView.builder(itemBuilder: (context, index) => Image(),)
           const SizedBox(
             height: 15,
           ),
+          FormField<String?>(
+            initialValue: widget.provider.body['category'],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Entrer une catégorie';
+              } else {
+                return null;
+              }
+            },
+            builder: (field) => widget.provider.categoriesLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : widget.provider.categories.fold(
+                    (l) => OutlinedButton(
+                        onPressed: () => widget.provider.fetshCategories(),
+                        child: const Column(
+                          children: [
+                            Text('Erreur de chargement des categories'),
+                            Text('refresh'),
+                          ],
+                        )),
+                    (categories) => DropdownButtonFormField<String?>(
+                      decoration:
+                          const InputDecoration(label: Text('Categories')),
+                      value: widget.provider.body['category'],
+                      items: categories
+                          .map(
+                            (c) => DropdownMenuItem<String>(
+                              child: Text('${c.title}'),
+                              //!the value of category is id
+                              value: c.id,
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) =>
+                          widget.provider.setField('category', value),
+                    ),
+                  ),
+          )
+
           // DropdownButtonFormField<String>(
           //   value: //todo,
           //   items: [

@@ -24,5 +24,5 @@ class ModelPostProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  processData() {}
+  Map<String, dynamic> processData() => {};
 }
