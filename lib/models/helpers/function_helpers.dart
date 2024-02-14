@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +16,36 @@ errorFromStatusCode(int? code) {
     default:
       return null;
   }
+}
+
+TextFormField formTf(
+  String text,
+  TextInputType? inputType, {
+  List<TextInputFormatter>? formatters,
+  required TextEditingController controller,
+  int? lines,
+  FloatingLabelBehavior? labelBehaviour,
+}) {
+  return TextFormField(
+    decoration: InputDecoration(
+      label: Text(text),
+      floatingLabelBehavior: labelBehaviour,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+    ),
+    controller: controller,
+    inputFormatters: formatters,
+    keyboardType: inputType,
+    maxLines: lines,
+    minLines: lines,
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return text;
+      }
+      return null;
+    },
+  );
 }
 
 Future showInformativeDialog(

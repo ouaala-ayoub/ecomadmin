@@ -6,6 +6,7 @@ class ModelPageProvider extends ChangeNotifier {
   final Helper helper;
   bool loading = true;
   late Either<dynamic, dynamic> model;
+
   ModelPageProvider({required this.helper});
 
   fetshModelById(String id) async {
@@ -15,13 +16,17 @@ class ModelPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  updateModel(String id, dynamic obj,
+  updateModel(String id,
       {required Function(dynamic) onFail,
       required Function(dynamic) onSuccess}) async {
     loading = true;
     notifyListeners();
-    final Either<dynamic, dynamic> res = await helper.putElement(id, obj);
+    final req = await processData();
+    final Either<dynamic, dynamic> res = await helper.putElement(id, req);
     res.fold((e) => onFail(e), (res) => onSuccess(res));
     loading = false;
+    notifyListeners();
   }
+
+  Future<Map<String, dynamic>> processData() async => {};
 }

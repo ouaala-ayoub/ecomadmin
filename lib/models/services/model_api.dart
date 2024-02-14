@@ -44,4 +44,14 @@ class ModelApi {
     );
     return res.data;
   }
+
+  Future<dynamic> putModel(String id, Map<String, dynamic> body) async {
+    final endpoint = '$_baseUrl/$route/$id';
+    final res = await Dio().put(
+      endpoint,
+      options: await getCookieOption(),
+      data: jsonEncode(body),
+    );
+    return res.data;
+  }
 }

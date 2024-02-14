@@ -1,5 +1,6 @@
 import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/category.dart';
+import 'package:ecomadmin/models/helpers/function_helpers.dart';
 import 'package:ecomadmin/providers/product_post_provider.dart';
 import 'package:ecomadmin/views/image_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -237,36 +238,6 @@ class _ProductPostWidgetState extends State<ProductPostWidget> {
           ),
         ],
       ),
-    );
-  }
-
-  TextFormField formTf(
-    String text,
-    TextInputType? inputType, {
-    List<TextInputFormatter>? formatters,
-    required TextEditingController controller,
-    int? lines,
-    FloatingLabelBehavior? labelBehaviour,
-  }) {
-    return TextFormField(
-      decoration: InputDecoration(
-        label: Text(text),
-        floatingLabelBehavior: labelBehaviour,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-      ),
-      controller: controller,
-      inputFormatters: formatters,
-      keyboardType: inputType,
-      maxLines: lines,
-      minLines: lines,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return text;
-        }
-        return null;
-      },
     );
   }
 }

@@ -66,4 +66,17 @@ class ModelHelper extends Helper {
       return Left(e);
     }
   }
+
+  @override
+  Future<Either<dynamic, dynamic>> putElement(String id, dynamic object) async {
+    try {
+      final res = await _api.putModel(id, object);
+      return Right(res['message']);
+    } on DioException catch (dioException) {
+      logger.e(dioException.response?.data['message']);
+      return Left(dioException.response?.data['message']);
+    } catch (e) {
+      return Left(e);
+    }
+  }
 }
