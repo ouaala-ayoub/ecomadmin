@@ -29,7 +29,9 @@ class ProductWidget extends StatelessWidget {
                   child: CircularProgressIndicator(
                       value: downloadProgress.progress)),
             ),
-            errorWidget: (context, url, error) => const ImageError(),
+            errorWidget: (context, url, error) => const ImageError(
+              height: 200,
+            ),
           ),
           const SizedBox(height: 5),
           Padding(

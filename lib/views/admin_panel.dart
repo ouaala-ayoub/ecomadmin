@@ -7,6 +7,7 @@ import 'package:ecomadmin/providers/admin_panel_provider.dart';
 import 'package:ecomadmin/providers/auth_provider.dart';
 import 'package:ecomadmin/providers/filtrable_list_provider.dart';
 import 'package:ecomadmin/views/filterable_list_widget.dart';
+import 'package:ecomadmin/views/order_widget.dart';
 import 'package:ecomadmin/views/product_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -31,8 +32,8 @@ class AdminPanel extends StatefulWidget {
         route: 'products'),
     Holder(
         converter: (res) => Order.fromMap(res),
-        builder: (context, data) => Text(
-              data.toString(),
+        builder: (context, data) => OrderWidget(
+              order: data as Order,
             ),
         route: 'orders'),
     Holder(
