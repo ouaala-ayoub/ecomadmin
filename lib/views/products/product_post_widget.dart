@@ -1,13 +1,12 @@
 import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/category.dart';
 import 'package:ecomadmin/providers/product_post_provider.dart';
+import 'package:ecomadmin/views/image_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'image_widget.dart';
 
 class ProductPostWidget extends StatefulWidget {
   const ProductPostWidget({super.key, required this.provider});

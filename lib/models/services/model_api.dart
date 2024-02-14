@@ -36,5 +36,12 @@ class ModelApi {
     return res.data;
   }
 
-  // Future<Either<dynamic, dynamic>> deleteElement(String id) {}
+  Future<dynamic> deleteElement(String id) async {
+    final endpoint = '$_baseUrl/$route/$id';
+    final res = await Dio().delete(
+      endpoint,
+      options: await getCookieOption(),
+    );
+    return res.data;
+  }
 }

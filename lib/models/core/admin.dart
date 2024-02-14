@@ -4,22 +4,26 @@ class Admin {
   String? id;
   String? username;
   String? password;
+  bool root;
 
-  Admin({this.id, this.username, this.password});
+  Admin({this.id, this.username, this.password, this.root = false});
 
   @override
-  String toString() => '(id: $id, username: $username, password: $password)';
+  String toString() =>
+      '(id: $id, username: $username, password: $password, root: $root)';
 
   factory Admin.fromMap(Map<String, dynamic> data) => Admin(
         id: data['_id'] as String?,
         username: data['username'] as String?,
         password: data['password'] as String?,
+        root: data['root'] ?? false,
       );
 
   Map<String, dynamic> toMap() => {
         '_id': id,
         'username': username,
         'password': password,
+        'root': root,
       };
 
   /// `dart:convert`

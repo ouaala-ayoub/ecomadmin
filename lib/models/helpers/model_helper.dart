@@ -22,7 +22,7 @@ class ModelHelper extends Helper {
       final res = await _api.fetshAll();
       return Right(res.map((e) => converterMethod?.call(e)).toList());
     } on DioException catch (dioException) {
-      throw Exception(dioException);
+      return Left(dioException.response?.data['message']);
     } catch (e) {
       return Left(e);
     }
@@ -34,7 +34,7 @@ class ModelHelper extends Helper {
       final res = await _api.fetshById(id);
       return Right(converterMethod?.call(res));
     } on DioException catch (dioException) {
-      throw Exception(dioException);
+      return Left(dioException.response?.data['message']);
     } catch (e) {
       return Left(e);
     }
@@ -46,6 +46,19 @@ class ModelHelper extends Helper {
     try {
       final res = await _api.postModel(object);
       return Right(res);
+    } on DioException catch (dioException) {
+      logger.e(dioException.response?.data['message']);
+      return Left(dioException.response?.data['message']);
+    } catch (e) {
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<dynamic, dynamic>> deleteElement(String id) async {
+    try {
+      final res = await _api.deleteElement(id);
+      return Right(res['message']);
     } on DioException catch (dioException) {
       logger.e(dioException.response?.data['message']);
       return Left(dioException.response?.data['message']);

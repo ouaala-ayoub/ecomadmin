@@ -3,7 +3,7 @@ import 'package:ecomadmin/models/core/product.dart';
 import 'package:ecomadmin/models/helpers/function_helpers.dart';
 import 'package:flutter/material.dart';
 
-import 'image_error.dart';
+import '../image_error.dart';
 
 class ProductWidget extends StatelessWidget {
   final Product product;

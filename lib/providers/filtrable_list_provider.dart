@@ -13,14 +13,14 @@ class FilterableListProvider extends ChangeNotifier {
   Either<dynamic, List<dynamic>> get found => _found;
 
   deleteElement(String id,
-      {required Function() onFail, Function()? onSuccess}) async {
+      {required Function(dynamic) onFail, Function(dynamic)? onSuccess}) async {
     loading = true;
     final deleted = await helper.deleteElement(id);
-    deleted.fold((l) {
-      onFail();
-    }, (r) {
+    deleted.fold((e) {
+      onFail(e);
+    }, (res) {
       getList();
-      onSuccess?.call();
+      onSuccess?.call(res);
     });
     loading = false;
     notifyListeners();

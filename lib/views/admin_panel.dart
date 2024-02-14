@@ -6,9 +6,11 @@ import 'package:ecomadmin/models/helpers/model_helper.dart';
 import 'package:ecomadmin/providers/admin_panel_provider.dart';
 import 'package:ecomadmin/providers/auth_provider.dart';
 import 'package:ecomadmin/providers/filtrable_list_provider.dart';
+import 'package:ecomadmin/views/admins/admin_widget.dart';
+import 'package:ecomadmin/views/categories/category_widget.dart';
 import 'package:ecomadmin/views/filterable_list_widget.dart';
-import 'package:ecomadmin/views/order_widget.dart';
-import 'package:ecomadmin/views/product_widget.dart';
+import 'package:ecomadmin/views/orders/order_widget.dart';
+import 'package:ecomadmin/views/products/product_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -38,15 +40,11 @@ class AdminPanel extends StatefulWidget {
         route: 'orders'),
     Holder(
         converter: (res) => Category.fromMap(res),
-        builder: (context, data) => Text(
-              data.toString(),
-            ),
+        builder: (context, data) => CategoryWidget(category: data as Category),
         route: 'categories'),
     Holder(
         converter: (res) => Admin.fromMap(res),
-        builder: (context, data) => Text(
-              data.toString(),
-            ),
+        builder: (context, data) => AdminWidget(admin: data as Admin),
         route: 'admins'),
   ];
 
@@ -71,6 +69,7 @@ class _AdminPanelState extends State<AdminPanel> {
             itemBuilder: element.builder,
             provider: provider,
             route: element.route,
+            canLook: index != 2,
           ),
         ),
       );

@@ -10,7 +10,7 @@ import 'package:ecomadmin/providers/product_post_provider.dart';
 import 'package:ecomadmin/views/home_page.dart';
 import 'package:ecomadmin/views/model_page.dart';
 import 'package:ecomadmin/views/model_post.widget.dart';
-import 'package:ecomadmin/views/product_post_widget.dart';
+import 'package:ecomadmin/views/products/product_post_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -114,6 +114,7 @@ class MyApp extends StatelessWidget {
             ),
           )
           .toList(),
+      //todo change to more clean way
       GoRoute(
         path: '/add/products',
         builder: (context, state) => ChangeNotifierProvider(
@@ -132,6 +133,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       )
+      //todo add model/edit/:id
     ],
   );
 
