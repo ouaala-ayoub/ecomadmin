@@ -1,13 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/models/core/order.dart';
 import 'package:ecomadmin/models/helpers/function_helpers.dart';
 import 'package:ecomadmin/views/image_error.dart';
 import 'package:flutter/material.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class OrderWidget extends StatelessWidget {
   //todo
   final Order order;
-  const OrderWidget({required this.order, super.key});
+  final bool canUpdate;
+  final String? status;
+  final Function(String?)? onChanged;
+  const OrderWidget(
+      {this.status,
+      this.canUpdate = false,
+      required this.order,
+      super.key,
+      this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -24,39 +34,10 @@ class OrderWidget extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            orderSource()
+            // orderSource()
           ],
         ),
       ),
-    );
-  }
-
-  Column orderSource() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Text(
-          'Commande de la part de :',
-          style: TextStyle(
-              color: Colors.red, fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: InfoWidget(keey: 'Nom: ', value: order.name),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: InfoWidget(
-            keey: 'Numero du téléphone: ',
-            value: order.phoneNumber,
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: InfoWidget(keey: 'Adresse: ', value: order.address),
-        ),
-      ],
     );
   }
 
@@ -129,12 +110,40 @@ class OrderWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text('id:${order.id}'),
-        Text(
-          order.status!,
-          style: TextStyle(
-            color: order.status! == 'Completed' ? Colors.green : Colors.orange,
-          ),
-        ),
+        canUpdate
+            ? DropdownButtonHideUnderline(
+                child: DropdownButton2<String>(
+                  value: status,
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'Completed',
+                      child: Text(
+                        'Completed',
+                        style: TextStyle(color: Colors.green),
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Pending',
+                      child: Text(
+                        'Pending',
+                        style: TextStyle(color: Colors.orange),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    logger.i(value);
+                    onChanged?.call(value);
+                  },
+                ),
+              )
+            : Text(
+                order.status!,
+                style: TextStyle(
+                  color: order.status! == 'Completed'
+                      ? Colors.green
+                      : Colors.orange,
+                ),
+              ),
       ],
     );
   }

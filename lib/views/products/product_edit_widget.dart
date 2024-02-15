@@ -327,7 +327,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                       );
                       ScaffoldMessenger.of(widget.modelPageContext)
                           .showSnackBar(snackBar);
-                      // widget.modelPageContext.pop();
+                      // widget.modelPageContext.pop(true);
                     },
                   );
                 }

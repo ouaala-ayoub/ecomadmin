@@ -1,4 +1,3 @@
-import 'package:ecomadmin/models/core/admin.dart';
 import 'package:ecomadmin/models/core/category.dart';
 import 'package:ecomadmin/models/core/order.dart';
 import 'package:ecomadmin/models/core/product.dart';
@@ -6,7 +5,6 @@ import 'package:ecomadmin/models/helpers/model_helper.dart';
 import 'package:ecomadmin/providers/admin_panel_provider.dart';
 import 'package:ecomadmin/providers/auth_provider.dart';
 import 'package:ecomadmin/providers/filtrable_list_provider.dart';
-import 'package:ecomadmin/views/admins/admin_widget.dart';
 import 'package:ecomadmin/views/categories/category_widget.dart';
 import 'package:ecomadmin/views/filterable_list_widget.dart';
 import 'package:ecomadmin/views/orders/order_widget.dart';
@@ -25,7 +23,11 @@ class Holder {
 class AdminPanel extends StatefulWidget {
   final AuthProvider authProvider;
   final AdminPanelProvider panelProvider;
-  static const titles = ['Produits', 'Commandes', 'Categories', 'Admins'];
+  static const titles = [
+    {'title': 'Produits', 'icon': Icon(Icons.shopping_bag_sharp)},
+    {'title': 'Commandes', 'icon': Icon(Icons.attach_money)},
+    {'title': 'Categories', 'icon': Icon(Icons.category)},
+  ];
   static final keys = [GlobalKey(), GlobalKey(), GlobalKey(), GlobalKey()];
   static final holders = [
     Holder(
@@ -42,10 +44,11 @@ class AdminPanel extends StatefulWidget {
         converter: (res) => Category.fromMap(res),
         builder: (context, data) => CategoryWidget(category: data as Category),
         route: 'categories'),
-    Holder(
-        converter: (res) => Admin.fromMap(res),
-        builder: (context, data) => AdminWidget(admin: data as Admin),
-        route: 'admins'),
+    //todo add admin
+    // Holder(
+    //     converter: (res) => Admin.fromMap(res),
+    //     builder: (context, data) => AdminWidget(admin: data as Admin),
+    //     route: 'admins'),
   ];
 
   const AdminPanel(
@@ -81,25 +84,49 @@ class _AdminPanelState extends State<AdminPanel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(title: Text(AdminPanel.titles[widget.panelProvider.index])),
+      appBar: AppBar(
+          title: Text(AdminPanel.titles[widget.panelProvider.index]['title']
+              .toString())),
       body: widgets[widget.panelProvider.index],
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            //todo add admin informations
-            const DrawerHeader(
-                decoration: BoxDecoration(color: Colors.red),
-                child: Text(
-                  'to add admin informations',
-                  style: TextStyle(color: Colors.white),
-                )),
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.red),
+              child: widget.authProvider.loading
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : widget.authProvider.auth.fold(
+                      (e) => const Center(
+                        child: Text('Unexpected error'),
+                      ),
+                      (admin) => Center(
+                          child: RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 18),
+                          children: [
+                            const TextSpan(text: 'Nom d utilisateur :'),
+                            TextSpan(
+                              text: ' ${admin.username}',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                    ),
+            ),
             Column(
               children: AdminPanel.titles.map((element) {
                 final index = AdminPanel.titles.indexOf(element);
                 return ListTile(
-                  title: Text(element),
+                  leading: element['icon'] as Widget,
+                  title: Text(element['title'].toString()),
                   onTap: () {
                     widget.panelProvider.setIndex(index);
                     context.pop();
@@ -108,23 +135,13 @@ class _AdminPanelState extends State<AdminPanel> {
               }).toList(),
             ),
             ListTile(
-              title: const Text('Logout'),
+              leading: const Icon(Icons.logout_outlined),
+              title: const Text('Se déconnecter'),
               onTap: () => widget.authProvider.logout(),
             ),
           ],
         ),
       ),
-      floatingActionButton: widget.panelProvider.index != 1
-          ? FloatingActionButton(
-              onPressed: () => context.push(
-                '/add/${AdminPanel.holders[widget.panelProvider.index].route}',
-              ),
-              child: const Icon(
-                Icons.add_circle_sharp,
-                color: Colors.black,
-              ),
-            )
-          : null,
     );
   }
 }

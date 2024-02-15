@@ -43,6 +43,7 @@ class ModelPostWidget extends StatelessWidget {
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
+                              logger.i(true);
                               context.pop(true);
                             },
                             onFail: (e) {

@@ -34,119 +34,148 @@ class _FilterableListWidgetState<T> extends State<FilterableListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        searchField(
-          onChanged: (query) => widget.provider.runFilter(query),
-          textFieldController: widget.provider.searchController,
-        ),
-        Expanded(
-          child: RefreshIndicator.adaptive(
-              child: widget.provider.loading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : widget.provider.found.fold(
-                      (e) => Center(
-                        child: Text('$e'),
-                      ),
-                      (data) => data.isEmpty
-                          ? const Center(
-                              child: Text('Pas de données'),
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: data.length,
-                              itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {
-                                  if (widget.canLook) {
-                                    context.push(
-                                        '/${widget.route}/${data[index].id}');
-                                  }
-                                },
-                                onLongPress: () {
-                                  showCupertinoModalPopup(
-                                    context: context,
-                                    builder: (context) => CupertinoActionSheet(
-                                      actions: [
-                                        if (widget.route != 'categories')
+    return Scaffold(
+      floatingActionButton: widget.route != 'orders'
+          ? FloatingActionButton(
+              onPressed: () async {
+                final added = await context.push(
+                  '/add/${widget.route}',
+                );
+                if (added == true) {
+                  widget.provider.getList();
+                }
+              },
+              child: const Icon(
+                Icons.add_circle_sharp,
+                color: Colors.black,
+              ),
+            )
+          : null,
+      body: Column(
+        children: [
+          searchField(
+            onChanged: (query) => widget.provider.runFilter(query),
+            textFieldController: widget.provider.searchController,
+          ),
+          Expanded(
+            child: RefreshIndicator.adaptive(
+                child: widget.provider.loading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : widget.provider.found.fold(
+                        (e) => Center(
+                          child: Text('$e'),
+                        ),
+                        (data) => data.isEmpty
+                            ? const Center(
+                                child: Text('Pas de données'),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: data.length,
+                                itemBuilder: (context, index) =>
+                                    GestureDetector(
+                                  onTap: () async {
+                                    if (widget.canLook) {
+                                      final didUpdate = await context.push(
+                                          '/${widget.route}/${data[index].id}');
+
+                                      if (didUpdate == true) {
+                                        widget.provider.getList();
+                                      }
+                                    }
+                                  },
+                                  onLongPress: () {
+                                    showCupertinoModalPopup(
+                                      context: context,
+                                      builder: (context) =>
+                                          CupertinoActionSheet(
+                                        actions: [
                                           CupertinoActionSheetAction(
-                                            onPressed: () {
-                                              context.push(
+                                            onPressed: () async {
+                                              final changed = await context.push(
                                                   '/${widget.route}/${data[index].id}');
+                                              if (changed == true) {
+                                                widget.provider.getList();
+                                              }
                                             },
-                                            child: const Text(
-                                              "Plus d'informations",
-                                              style: TextStyle(
+                                            child: Text(
+                                              widget.route == 'orders'
+                                                  ? "Plus d'informations"
+                                                  : 'Modifer les informations',
+                                              style: const TextStyle(
                                                   color: Colors.black),
                                             ),
                                           ),
-                                        CupertinoActionSheetAction(
-                                          isDestructiveAction: true,
-                                          onPressed: () {
-                                            showAdaptiveDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  AlertDialog.adaptive(
-                                                title:
-                                                    const Text('Supprimer ?'),
-                                                content: const Text(
-                                                  'Vous êtes sur le point de supprimer ! procéder ?',
+                                          CupertinoActionSheetAction(
+                                            isDestructiveAction: true,
+                                            onPressed: () {
+                                              showAdaptiveDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog.adaptive(
+                                                  title:
+                                                      const Text('Supprimer ?'),
+                                                  content: const Text(
+                                                    'Vous êtes sur le point de supprimer ! procéder ?',
+                                                  ),
+                                                  actions: [
+                                                    FilledButton(
+                                                      onPressed: () {
+                                                        widget.provider
+                                                            .deleteElement(
+                                                          data[index].id,
+                                                          onSuccess: (res) {
+                                                            logger.i(res);
+                                                            const snackBar =
+                                                                SnackBar(
+                                                              content: Text(
+                                                                  'Supprimée avec success'),
+                                                            );
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    snackBar);
+                                                            context.pop();
+                                                            context.pop();
+                                                          },
+                                                          onFail: (e) {
+                                                            logger.e(e);
+                                                            showInformativeDialog(
+                                                              context,
+                                                              'Erreur innatendue , réessayer',
+                                                              'erreur',
+                                                            );
+                                                          },
+                                                        );
+                                                      },
+                                                      child: const Text('Oui'),
+                                                    ),
+                                                    OutlinedButton(
+                                                      onPressed: () =>
+                                                          context.pop(),
+                                                      child: const Text('Non'),
+                                                    ),
+                                                  ],
                                                 ),
-                                                actions: [
-                                                  FilledButton(
-                                                    onPressed: () {
-                                                      widget.provider
-                                                          .deleteElement(
-                                                        data[index].id,
-                                                        onSuccess: (res) {
-                                                          logger.i(res);
-                                                          const snackBar =
-                                                              SnackBar(
-                                                            content: Text(
-                                                                'Supprimée avec success'),
-                                                          );
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(
-                                                                  snackBar);
-                                                          context.pop();
-                                                          context.pop();
-                                                        },
-                                                        onFail: (e) {
-                                                          logger.e(e);
-                                                          showInformativeDialog(
-                                                            context,
-                                                            'Erreur innatendue , réessayer',
-                                                            'erreur',
-                                                          );
-                                                        },
-                                                      );
-                                                    },
-                                                    child: const Text('Oui'),
-                                                  ),
-                                                  OutlinedButton(
-                                                    onPressed: () =>
-                                                        context.pop(),
-                                                    child: const Text('Non'),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                          child: const Text('Supprimer'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                child: widget.itemBuilder(context, data[index]),
+                                              );
+                                            },
+                                            child: const Text('Supprimer'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  child:
+                                      widget.itemBuilder(context, data[index]),
+                                ),
                               ),
-                            ),
-                    ),
-              onRefresh: () async => await requestData()),
-        ),
-      ],
+                      ),
+                onRefresh: () async => await requestData()),
+          ),
+        ],
+      ),
     );
   }
 }

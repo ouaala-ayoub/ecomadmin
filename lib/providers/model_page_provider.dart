@@ -22,6 +22,7 @@ class ModelPageProvider extends ChangeNotifier {
     loading = true;
     notifyListeners();
     final req = await processData();
+    // logger.i('body is $req');
     final Either<dynamic, dynamic> res = await helper.putElement(id, req);
     res.fold((e) => onFail(e), (res) => onSuccess(res));
     loading = false;
