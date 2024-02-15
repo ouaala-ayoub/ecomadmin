@@ -105,7 +105,8 @@ class _FilterableListWidgetState<T> extends State<FilterableListWidget> {
                                                   ? "Plus d'informations"
                                                   : 'Modifer les informations',
                                               style: const TextStyle(
-                                                  color: Colors.black),
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ),
                                           CupertinoActionSheetAction(
