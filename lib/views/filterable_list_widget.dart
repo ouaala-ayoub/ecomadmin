@@ -72,7 +72,6 @@ class _FilterableListWidgetState<T> extends State<FilterableListWidget> {
                                 child: Text('Pas de données'),
                               )
                             : ListView.builder(
-                                shrinkWrap: true,
                                 itemCount: data.length,
                                 itemBuilder: (context, index) =>
                                     GestureDetector(

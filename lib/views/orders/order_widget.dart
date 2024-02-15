@@ -112,41 +112,50 @@ class OrderWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('id:${order.id}'),
+        Expanded(
+          child: Text(
+            'id:${order.id}',
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         canUpdate
-            ? DropdownButtonHideUnderline(
-                child: DropdownButton2<String>(
-                  value: status,
-                  items: const [
-                    DropdownMenuItem(
-                      value: 'Completed',
-                      child: Row(
-                        children: [
-                          Icon(Icons.check, color: Colors.green),
-                          Text(
-                            'Completed',
-                            style: TextStyle(color: Colors.green),
-                          ),
-                        ],
+            ? Expanded(
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton2<String>(
+                    value: status,
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'Completed',
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.check, color: Colors.green),
+                            Text(
+                              'Completed',
+                              style: TextStyle(color: Colors.green),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Pending',
-                      child: Row(
-                        children: [
-                          Icon(Icons.timelapse, color: Colors.orange),
-                          Text(
-                            'Pending',
-                            style: TextStyle(color: Colors.orange),
-                          ),
-                        ],
+                      DropdownMenuItem(
+                        value: 'Pending',
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.timelapse, color: Colors.orange),
+                            Text(
+                              'Pending',
+                              style: TextStyle(color: Colors.orange),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    logger.i(value);
-                    onChanged?.call(value);
-                  },
+                    ],
+                    onChanged: (value) {
+                      logger.i(value);
+                      onChanged?.call(value);
+                    },
+                  ),
                 ),
               )
             : Row(
