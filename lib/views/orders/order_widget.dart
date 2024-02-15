@@ -106,6 +106,9 @@ class OrderWidget extends StatelessWidget {
   }
 
   Row orderHeader() {
+    final isCompleted = order.status! == 'Completed';
+    final icon = isCompleted ? Icons.check : Icons.timelapse;
+    final color = isCompleted ? Colors.green : Colors.orange;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -117,16 +120,26 @@ class OrderWidget extends StatelessWidget {
                   items: const [
                     DropdownMenuItem(
                       value: 'Completed',
-                      child: Text(
-                        'Completed',
-                        style: TextStyle(color: Colors.green),
+                      child: Row(
+                        children: [
+                          Icon(Icons.check, color: Colors.green),
+                          Text(
+                            'Completed',
+                            style: TextStyle(color: Colors.green),
+                          ),
+                        ],
                       ),
                     ),
                     DropdownMenuItem(
                       value: 'Pending',
-                      child: Text(
-                        'Pending',
-                        style: TextStyle(color: Colors.orange),
+                      child: Row(
+                        children: [
+                          Icon(Icons.timelapse, color: Colors.orange),
+                          Text(
+                            'Pending',
+                            style: TextStyle(color: Colors.orange),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -136,13 +149,20 @@ class OrderWidget extends StatelessWidget {
                   },
                 ),
               )
-            : Text(
-                order.status!,
-                style: TextStyle(
-                  color: order.status! == 'Completed'
-                      ? Colors.green
-                      : Colors.orange,
-                ),
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    color: color,
+                  ),
+                  Text(
+                    order.status!,
+                    style: TextStyle(
+                      color: color,
+                    ),
+                  ),
+                ],
               ),
       ],
     );
