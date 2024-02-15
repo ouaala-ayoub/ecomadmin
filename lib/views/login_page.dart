@@ -64,8 +64,8 @@ class LoginPage extends StatelessWidget {
           FilledButton(
               onPressed: () {
                 final creds = Admin(
-                    username: loginProvider.usernameController.text,
-                    password: loginProvider.passwordController.text);
+                    username: loginProvider.usernameController.text.trim(),
+                    password: loginProvider.passwordController.text.trim());
 
                 logger.i(creds.toMap());
 
