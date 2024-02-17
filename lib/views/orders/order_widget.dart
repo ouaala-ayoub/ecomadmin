@@ -69,23 +69,26 @@ class OrderWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  children: [
-                    Text(
+              Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
                       order.product!.title!,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 20,
                       ),
                     ),
-                    Text(
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
                       order.product!.category ?? '-',
                       overflow: TextOverflow.ellipsis,
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
