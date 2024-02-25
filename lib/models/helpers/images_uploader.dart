@@ -20,7 +20,7 @@ class ImagesUploader {
           contentType: 'image/$ext',
         );
         final uploadTask = await firebaseRef
-            .child('posts/$fileName')
+            .child('products/$fileName')
             .putFile(File(image.path), metadata);
         final url = await uploadTask.ref.getDownloadURL();
         // mapper[url] = image.name;
