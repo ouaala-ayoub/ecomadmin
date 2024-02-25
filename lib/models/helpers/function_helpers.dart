@@ -1,6 +1,4 @@
 import 'dart:math';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -58,7 +56,7 @@ Future showInformativeDialog(
             actions: [
               FilledButton(
                 onPressed: () => context.pop(),
-                child: Text('OK'),
+                child: const Text('OK'),
               )
             ],
           ));

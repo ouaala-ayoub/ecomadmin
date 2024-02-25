@@ -27,7 +27,9 @@ class _ModelPageState extends State<ModelPage> {
   Widget build(BuildContext context) {
     final provider = widget.modelPageProvider;
     return Scaffold(
-      appBar: AppBar(title: Text('to change')),
+      appBar: AppBar(
+        title: const Text('to change'),
+      ),
       body: provider.loading
           ? const Center(
               child: CircularProgressIndicator(),

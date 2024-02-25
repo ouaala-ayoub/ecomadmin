@@ -9,7 +9,8 @@ class ErrorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SelectableText(message, style: TextStyle(color: Colors.red)),
+        child:
+            SelectableText(message, style: const TextStyle(color: Colors.red)),
       ),
     );
   }
