@@ -7,9 +7,7 @@ import 'package:ecomadmin/models/services/model_api.dart';
 class ModelHelper extends Helper {
   ModelHelper({required this.route, required this.converterMethod})
       : _api = ModelApi(route: route),
-        super(route: route) {
-    logger.d('helper with route $route');
-  }
+        super(route: route);
 
   @override
   final String route;

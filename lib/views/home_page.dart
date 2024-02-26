@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
                   )
                 : ErrorPage(
                     message: e.toString(),
+                    onRefresh: () => widget.authProvider.getAuth(),
                   ),
             (auth) => ChangeNotifierProvider(
                   create: (context) => AdminPanelProvider(),

@@ -35,7 +35,11 @@ class _ModelPageState extends State<ModelPage> {
               child: CircularProgressIndicator(),
             )
           : provider.model.fold(
-              (e) => ErrorPage(message: e.toString()),
+              (e) => ErrorPage(
+                message: e.toString(),
+                onRefresh: () =>
+                    widget.modelPageProvider.fetshModelById(widget.modelId),
+              ),
               (model) => widget.widgetBuilder(model),
             ),
     );

@@ -20,6 +20,7 @@ class ImageWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Image.file(
+          fit: BoxFit.contain,
           File(file.path),
           height: 200,
         ),
@@ -39,7 +40,7 @@ class NetworkImageWidget extends StatelessWidget {
     return GestureDetector(
       onLongPress: () => onLongPress(imageUrl),
       child: CachedNetworkImage(
-        fit: BoxFit.fitWidth,
+        fit: BoxFit.contain,
         height: 200,
         imageUrl: imageUrl,
         progressIndicatorBuilder: (context, url, downloadProgress) => SizedBox(

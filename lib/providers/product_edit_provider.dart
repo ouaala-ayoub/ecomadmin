@@ -101,6 +101,7 @@ class ProductEditProvider extends ModelPageProvider {
   }
 
   void initialiseData(Product product) async {
+    logger.d('inited data $product');
     body['title'] = TextEditingController(text: product.title);
     body['price'] = TextEditingController(text: product.price.toString());
     body['images'] = product.images;

@@ -111,24 +111,25 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                           .toList()
                           .length,
                       itemBuilder: (context, index) => ImageWidget(
-                          file: widget.provider.body['images']
-                              .whereType<XFile>()
-                              .toList()[index],
-                          onLongPress: (file) {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) => CupertinoActionSheet(
-                                actions: [
-                                  CupertinoActionSheetAction(
-                                      onPressed: () {
-                                        widget.provider.removeFile(file);
-                                        context.pop();
-                                      },
-                                      child: const Text("Supprimer"))
-                                ],
-                              ),
-                            );
-                          }),
+                        file: widget.provider.body['images']
+                            .whereType<XFile>()
+                            .toList()[index],
+                        onLongPress: (file) {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) => CupertinoActionSheet(
+                              actions: [
+                                CupertinoActionSheetAction(
+                                    onPressed: () {
+                                      widget.provider.removeFile(file);
+                                      context.pop();
+                                    },
+                                    child: const Text("Supprimer"))
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   if (widget.provider.body['images']
                       .whereType<String>()
@@ -142,24 +143,26 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                           .toList()
                           .length,
                       itemBuilder: (context, index) => NetworkImageWidget(
-                          imageUrl: widget.provider.body['images']
-                              .whereType<String>()
-                              .toList()[index],
-                          onLongPress: (url) {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) => CupertinoActionSheet(
-                                actions: [
-                                  CupertinoActionSheetAction(
-                                      onPressed: () {
-                                        widget.provider.removeFile(url);
-                                        context.pop();
-                                      },
-                                      child: const Text("Supprimer"))
-                                ],
-                              ),
-                            );
-                          }),
+                        imageUrl: widget.provider.body['images']
+                            .whereType<String>()
+                            .toList()[index],
+                        onLongPress: (url) {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) => CupertinoActionSheet(
+                              actions: [
+                                CupertinoActionSheetAction(
+                                  onPressed: () {
+                                    widget.provider.removeFile(url);
+                                    context.pop();
+                                  },
+                                  child: const Text("Supprimer"),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
 
                   const SizedBox(
