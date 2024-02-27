@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 
 class CategoryEditProvider extends ModelPageProvider {
   CategoryEditProvider({required super.helper});
-  bool firstTime = true;
+
   Map<String, dynamic> body = {};
 
   @override
   fetshModelById(String id) async {
     await super.fetshModelById(id);
     super.model.fold((l) => null, (category) => initiStatus(category));
-    firstTime = false;
   }
 
   initiStatus(Category category) {

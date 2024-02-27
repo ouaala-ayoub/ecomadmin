@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ProductEditWidget extends StatefulWidget {
+class ProductEditWidget extends StatelessWidget {
   final BuildContext modelPageContext;
   final Product product;
   final ProductEditProvider provider;
@@ -21,24 +21,13 @@ class ProductEditWidget extends StatefulWidget {
       super.key});
 
   @override
-  State<ProductEditWidget> createState() => _ProductEditWidgetState();
-}
-
-class _ProductEditWidgetState extends State<ProductEditWidget> {
-  @override
-  void initState() {
-    super.initState();
-    widget.provider.initialiseData(widget.product);
-  }
-
-  @override
-  Widget build(BuildContext buildContext) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Column(
         children: [
           Form(
-            key: widget.provider.key,
+            key: provider.key,
             child: Expanded(
               child: ListView(
                 shrinkWrap: true,
@@ -47,18 +36,18 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                     height: 10,
                   ),
                   formTf('Entrez le Titre', TextInputType.text,
-                      controller: widget.provider.body['title']),
+                      controller: provider.body['title']),
                   const SizedBox(
                     height: 15,
                   ),
                   formTf('Entrez le Prix', TextInputType.number,
                       formatters: [FilteringTextInputFormatter.digitsOnly],
-                      controller: widget.provider.body['price']),
+                      controller: provider.body['price']),
                   const SizedBox(
                     height: 10,
                   ),
                   FormField<dynamic>(
-                    initialValue: widget.provider.body['images'],
+                    initialValue: provider.body['images'],
                     autovalidateMode: AutovalidateMode.always,
                     validator: (value) {
                       logger.d('images value $value');
@@ -76,7 +65,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                               //todo do the images pick logic
                               final imagePicker = ImagePicker();
                               final images = await imagePicker.pickMultiImage();
-                              widget.provider.addImages(images);
+                              provider.addImages(images);
                             },
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
@@ -99,19 +88,19 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                   const SizedBox(
                     height: 10,
                   ),
-                  if (widget.provider.body['images']
+                  if (provider.body['images']
                       .whereType<XFile>()
                       .toList()
                       .isNotEmpty)
                     ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: widget.provider.body['images']
+                      itemCount: provider.body['images']
                           .whereType<XFile>()
                           .toList()
                           .length,
                       itemBuilder: (context, index) => ImageWidget(
-                        file: widget.provider.body['images']
+                        file: provider.body['images']
                             .whereType<XFile>()
                             .toList()[index],
                         onLongPress: (file) {
@@ -121,7 +110,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                               actions: [
                                 CupertinoActionSheetAction(
                                     onPressed: () {
-                                      widget.provider.removeFile(file);
+                                      provider.removeFile(file);
                                       context.pop();
                                     },
                                     child: const Text("Supprimer"))
@@ -131,19 +120,19 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                         },
                       ),
                     ),
-                  if (widget.provider.body['images']
+                  if (provider.body['images']
                       .whereType<String>()
                       .toList()
                       .isNotEmpty)
                     ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: widget.provider.body['images']
+                      itemCount: provider.body['images']
                           .whereType<String>()
                           .toList()
                           .length,
                       itemBuilder: (context, index) => NetworkImageWidget(
-                        imageUrl: widget.provider.body['images']
+                        imageUrl: provider.body['images']
                             .whereType<String>()
                             .toList()[index],
                         onLongPress: (url) {
@@ -153,7 +142,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                               actions: [
                                 CupertinoActionSheetAction(
                                   onPressed: () {
-                                    widget.provider.removeFile(url);
+                                    provider.removeFile(url);
                                     context.pop();
                                   },
                                   child: const Text("Supprimer"),
@@ -169,7 +158,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                     height: 15,
                   ),
                   FormField<Category?>(
-                    initialValue: widget.provider.body['category'],
+                    initialValue: provider.body['category'],
                     validator: (value) {
                       logger.i('category value $value');
                       if (value == null) {
@@ -181,14 +170,13 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                     builder: (state) => Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        widget.provider.categoriesLoading
+                        provider.categoriesLoading
                             ? const Center(
                                 child: CircularProgressIndicator(),
                               )
-                            : widget.provider.categories.fold(
+                            : provider.categories.fold(
                                 (l) => OutlinedButton(
-                                    onPressed: () =>
-                                        widget.provider.fetshCategories(),
+                                    onPressed: () => provider.fetshCategories(),
                                     child: const Column(
                                       children: [
                                         Text(
@@ -204,7 +192,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                                       borderRadius: BorderRadius.circular(30),
                                     ),
                                   ),
-                                  value: widget.provider.body['category'],
+                                  value: provider.body['category'],
                                   items: categories
                                       .map(
                                         (c) => DropdownMenuItem<Category>(
@@ -215,7 +203,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                                       )
                                       .toList(),
                                   onChanged: (value) {
-                                    widget.provider.setField('category', value);
+                                    provider.setField('category', value);
                                     state.didChange(value);
                                   },
                                 ),
@@ -232,7 +220,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                     height: 10,
                   ),
                   FormField<String?>(
-                    initialValue: widget.provider.body['subcategory'],
+                    initialValue: provider.body['subcategory'],
                     validator: (value) {
                       // logger.i(value);
                       if (value == null) {
@@ -244,11 +232,11 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                     builder: (state) => Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        widget.provider.categoriesLoading
+                        provider.categoriesLoading
                             ? const Center(
                                 child: CircularProgressIndicator(),
                               )
-                            : widget.provider.subcategories.fold(
+                            : provider.subcategories.fold(
                                 (l) => OutlinedButton(
                                     onPressed: () {},
                                     child: const Column(
@@ -266,7 +254,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                                       borderRadius: BorderRadius.circular(30),
                                     ),
                                   ),
-                                  value: widget.provider.body['subcategory'],
+                                  value: provider.body['subcategory'],
                                   items: subcategories
                                       .map(
                                         (c) => DropdownMenuItem<String>(
@@ -278,8 +266,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                                       )
                                       .toList(),
                                   onChanged: (value) {
-                                    widget.provider
-                                        .setField('subcategory', value);
+                                    provider.setField('subcategory', value);
                                     state.didChange(value);
                                   },
                                 ),
@@ -298,7 +285,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                   formTf(
                     "Entrez la Description",
                     TextInputType.text,
-                    controller: widget.provider.body['description'],
+                    controller: provider.body['description'],
                     lines: 5,
                     labelBehaviour: FloatingLabelBehavior.always,
                   ),
@@ -313,9 +300,9 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
             width: double.infinity,
             child: FilledButton(
               onPressed: () {
-                if (widget.provider.key.currentState!.validate()) {
-                  widget.provider.updateModel(
-                    widget.product.id!,
+                if (provider.key.currentState!.validate()) {
+                  provider.updateModel(
+                    product.id!,
                     onFail: (e) {
                       showInformativeDialog(
                         context,
@@ -328,7 +315,7 @@ class _ProductEditWidgetState extends State<ProductEditWidget> {
                       const snackBar = SnackBar(
                         content: Text('Informations mise a jour avec success'),
                       );
-                      ScaffoldMessenger.of(widget.modelPageContext)
+                      ScaffoldMessenger.of(modelPageContext)
                           .showSnackBar(snackBar);
                       // widget.modelPageContext.pop(true);
                     },

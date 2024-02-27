@@ -1,3 +1,4 @@
+import 'package:ecomadmin/main.dart';
 import 'package:ecomadmin/providers/model_page_provider.dart';
 import 'package:ecomadmin/views/error_page.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,10 @@ class _ModelPageState extends State<ModelPage> {
                 onRefresh: () =>
                     widget.modelPageProvider.fetshModelById(widget.modelId),
               ),
-              (model) => widget.widgetBuilder(model),
+              (model) {
+                logger.i("model in the page model $model");
+                return widget.widgetBuilder(model);
+              },
             ),
     );
   }

@@ -27,6 +27,14 @@ class ProductEditProvider extends ModelPageProvider {
 
   Map<String, dynamic> get body => _body;
 
+  @override
+  fetshModelById(String id) async {
+    await super.fetshModelById(id);
+    super
+        .model
+        .fold((l) => null, (product) async => await initialiseData(product));
+  }
+
   addImages(List<XFile> images) {
     body['images'].addAll(images);
     notifyListeners();
@@ -100,7 +108,7 @@ class ProductEditProvider extends ModelPageProvider {
     notifyListeners();
   }
 
-  void initialiseData(Product product) async {
+  initialiseData(Product product) async {
     logger.d('inited data $product');
     body['title'] = TextEditingController(text: product.title);
     body['price'] = TextEditingController(text: product.price.toString());
