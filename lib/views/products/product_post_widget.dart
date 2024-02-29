@@ -127,13 +127,14 @@ class _ProductPostWidgetState extends State<ProductPostWidget> {
                       )
                     : widget.provider.categories.fold(
                         (l) => OutlinedButton(
-                            onPressed: () => widget.provider.fetshCategories(),
-                            child: const Column(
-                              children: [
-                                Text('Erreur de chargement des categories'),
-                                Text('refresh'),
-                              ],
-                            )),
+                          onPressed: () => widget.provider.fetshCategories(),
+                          child: const Column(
+                            children: [
+                              Text('Erreur de chargement des categories'),
+                              Text('refresh'),
+                            ],
+                          ),
+                        ),
                         (categories) => DropdownButtonFormField<Category>(
                           decoration: InputDecoration(
                             label: const Text('Categories'),

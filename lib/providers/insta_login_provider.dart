@@ -7,6 +7,13 @@ class InstaLoginProvider extends ChangeNotifier {
   final passwordController = TextEditingController();
   bool loading = false;
 
+  @override
+  void dispose() {
+    super.dispose();
+    usernameController.dispose();
+    passwordController.dispose();
+  }
+
   instaLogin(username, password,
       {required Function(dynamic) onSuccess,
       required Function(dynamic) onFail}) async {

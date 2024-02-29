@@ -11,7 +11,7 @@ class InstagramLoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Instagram login'),
+        title: const Text('Instagram login'),
       ),
       body: Form(
         key: instaLoginProvider.key,
@@ -48,6 +48,14 @@ class LoginBody extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           //todo add instagram icon
+          Image.asset(
+            "assets/images/Instagram_icon.webp",
+            height: 130,
+            width: 130,
+          ),
+          const SizedBox(
+            height: 30,
+          ),
           TextFormField(
             decoration: InputDecoration(
               label: const Text('Username'),
