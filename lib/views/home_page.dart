@@ -47,13 +47,14 @@ class _HomePageState extends State<HomePage> {
                     onRefresh: () => widget.authProvider.getAuth(),
                   ),
             (auth) => ChangeNotifierProvider(
-                  create: (context) => AdminPanelProvider(),
-                  child: Consumer<AdminPanelProvider>(
-                    builder: (context, adminPanelProvider, child) => AdminPanel(
-                      panelProvider: adminPanelProvider,
-                      authProvider: provider,
-                    ),
-                  ),
-                ));
+              create: (context) => AdminPanelProvider(),
+              child: Consumer<AdminPanelProvider>(
+                builder: (context, adminPanelProvider, child) => AdminPanel(
+                  panelProvider: adminPanelProvider,
+                  authProvider: provider,
+                ),
+              ),
+            ),
+          );
   }
 }

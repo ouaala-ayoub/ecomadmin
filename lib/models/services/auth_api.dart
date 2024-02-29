@@ -10,9 +10,27 @@ class AuthApi {
     final endpoint = baseUrl;
     final cookie = await getSessionCookie();
     logger.i(cookie);
-    final res = await Dio().get(endpoint,
-        options: Options(headers: {'Cookie': 'session=$cookie'}));
+    final res = await Dio().get(
+      endpoint,
+      options: Options(
+        headers: {'Cookie': 'session=$cookie'},
+      ),
+    );
     logger.i(res.data);
+    return res.data;
+  }
+
+  static Future<dynamic> instaLogin(String username, String password) async {
+    final endpoint = "${dotenv.env['BASE_URL']}/insta/login";
+    final creds = {'username': username, 'password': password};
+    final cookie = await getSessionCookie();
+    final res = await Dio().post(
+      endpoint,
+      data: jsonEncode(creds),
+      options: Options(
+        headers: {'Cookie': 'session=$cookie'},
+      ),
+    );
     return res.data;
   }
 

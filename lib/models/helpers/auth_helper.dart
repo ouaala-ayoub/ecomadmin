@@ -37,7 +37,23 @@ class AuthHelper {
     }
   }
 
+  static Future<Either<dynamic, dynamic>> instaLogin(
+      String username, String password) async {
+    try {
+      final res = await AuthApi.instaLogin(username, password);
+      return Right(res['message']);
+    } on DioException catch (e) {
+      logger.e(e.response);
+      logger.e(e.response?.data['message']);
+      return Left(e.response?.statusCode);
+    } catch (e) {
+      logger.e(e);
+      return const Left(500);
+    }
+  }
+
   logout() async {
+    //todo add logout from instagram
     await deleteSessionCookie();
   }
 }

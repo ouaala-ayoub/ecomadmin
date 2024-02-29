@@ -132,7 +132,14 @@ class _AdminPanelState extends State<AdminPanel> {
                     context.pop();
                   },
                 );
-              }).toList(),
+              }).toList()
+                ..add(
+                  //todo add instagram picture
+                  ListTile(
+                    title: Text('Lier avec instagram'),
+                    onTap: () => context.push('/insta_login'),
+                  ),
+                ),
             ),
             ListTile(
               leading: const Icon(Icons.logout_outlined),
